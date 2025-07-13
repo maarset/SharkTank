@@ -267,7 +267,7 @@ foreach($resultLs as $result)
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
-	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js">
+	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 	<script type="text/javascript">
 				 $(document).ready(function () {          
 							setTimeout(function() {

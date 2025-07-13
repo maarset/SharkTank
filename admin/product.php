@@ -12,7 +12,7 @@ else{
 
    if(isset($_GET['TeamID'])) 
 	{
-		$teamid=$_GET['TeamID'];
+		$teamid=$_GET['TeamID']; 
     }
     else
     {

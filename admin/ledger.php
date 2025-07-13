@@ -289,7 +289,7 @@ th
 						</div><!--panel panel-default -->
 					</div><!--col-md-12"-->
 				</div> <!-- row -->
-			<!--</div>ROW-->
+			<!--</div>ROW--> 
 
 			
 
@@ -322,8 +322,8 @@ th
 									$query4->execute();
 									$result4=$query4->fetchAll(PDO::FETCH_OBJ);
 
-									//Monthly AVG\
-									$sql5 = "SELECT AVG(L.Amount) AS AVG,month(L.dateentered) AS MONTH,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount <> 0  group by month(L.dateentered) ORDER BY month(L.dateentered) asc";
+									//Weekly Exp  AVG\
+									$sql5 = "SELECT AVG(L.Amount) AS AVG,week(L.dateentered) AS WEEK,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount < 0  group by week(L.dateentered) ORDER BY week(L.dateentered) asc";
 									$query5 = $dbh -> prepare($sql5);
 									$query5-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
 									$query5->execute();
@@ -374,14 +374,14 @@ th
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3">
+				<div class="col-md-4">
 					<div class="panel panel-default"><!--<div class="panel-heading">List Transactions </div>-->
-						<div class="panel-body">	<div class="panel-heading">Monthly Average </div>
-						<table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="40%">
+						<div class="panel-body">	<div class="panel-heading">Weekly Exp Average </div>
+						<table id="LedgerAVG" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-											<th width="10%">Month</th>
-											<th width="20%">Average</th>	
+											<th width="10%">Week</th>
+											<th width="30%">Average</th>	
 										</tr>
 									</thead>
 									<tbody>
@@ -390,7 +390,7 @@ th
 									foreach($result5 as $res5)
 									{
 									echo('<TR>');
-										echo('<TD>'. $res5->MONTH . ':</td>  <TD>$' . number_format((float)$res5->AVG, 2, '.', '')  . '</TD>');
+										echo('<TD>'. $res5->WEEK . ':</td>  <TD>$' . number_format((float)$res5->AVG, 2, '.', '')  . '</TD>');
 									echo('</TR>');
 									}
 									
@@ -400,10 +400,10 @@ th
 						</div>
 					</div>
 				</div>
-				<div class="col-md-5">
+				<div class="col-md-4">
 					<div class="panel panel-default"><!--<div class="panel-heading">List Transactions </div>-->
 						<div class="panel-body"><div class="panel-heading">Product Details </div>
-						<table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="40%">
+						<table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="30%">
 									<thead>
 										<tr>
 											<th>Description</th>
@@ -487,14 +487,24 @@ th
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
-	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js">
+	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 	<script type="text/javascript">
 				 $(document).ready(function () {          
 							setTimeout(function() {
 							$('.succWrap').slideUp("slow");
 							}, 3000);
 
+							new DataTable('#LedgerAVG', {
+						    info: false,
+						    ordering: true,
+						    paging: true,
+							 order: [[3, 'asc']],
+							lengthMenu: [10, 25, 50, -1]
 
+						    // ,lengthMenu: [
+						    //    [10, 25, 50, "All"]
+						    //]
+						}); 
 
 					});//$(document).ready
 		</script>

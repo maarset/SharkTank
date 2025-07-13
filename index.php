@@ -23,7 +23,7 @@ if($query->rowCount() > 0)
 		$_SESSION['alogin']=$_POST['username'];
 		if($results->ClassID == $ClassIDGlobal )
 		{
-		echo "<script type='text/javascript'> document.location = 'ledger.php'; </script>";
+		echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
 		}
 		else
 		{

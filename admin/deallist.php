@@ -16,8 +16,8 @@ $name=$_GET['name'];
 //$sql = "delete from users WHERE id=:id";
 $sql = "delete from Team WHERE TeamID=:id";
 $query = $dbh->prepare($sql);
-$query -> bindParam(':id',$id, PDO::PARAM_STR);
-$query -> execute();
+$query -> bindParam(':id',$id, PDO::PARAM_STR); 
+//$query -> execute();
 
 }
 
@@ -38,7 +38,7 @@ $query -> execute();
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Manage Teams</title>
+	<title>Manage Deals</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -90,27 +90,29 @@ $query -> execute();
 				<div class="row">
 					<div class="col-md-12">
 
-						<h2 class="page-title">Manage Teams</h2>
+						<h2 class="page-title">Manage Deals</h2>
 						
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Teams <a href="new-team.php">New</a></div>
+							<div class="panel-heading">List Deals <a href="new-deal.php">New</a></div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
 								<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
 									<thead>
 										<tr>
-										<th>#</th>
+										
+												<th>Deal Name</th>
+                                                <th>Shark Name</th>
 												<th>Team Name</th>
-                                                <th>Class Name</th>
-												<th>School Year</th>
-                                                <th>Shark</th>
-												<th>IG Followers</TH>
-                                                <th>Credit</th>
-                                                <th>Debit</th>
-                                                <th>Balance</th>
-                                               
+                                                <th>Class</th>
+												<th>Total Invested</TH>
+                                                <th>% company</th>
+												<th>Created By</th>
+                                               <th>Created Date</th>
+                                                <th>Updated By</th>
+												<th>Updated Date</th>
+                                                
 											<th>Action</th>	
 										</tr> 
 									</thead>
@@ -118,12 +120,15 @@ $query -> execute();
 									<tbody>
 
 <?php 
-$sql = "SELECT T.TeamID,T.TeamName,C.ClassName,SY.YearName,S.SharkName,T.IGFollowers,T.credit,T.debit,T.balance ";
-$sql .= "from  Team AS T,Class AS C,SchoolYear AS SY, Shark AS S WHERE T.ClassID = C.ClassID AND T.SchoolYearID = SY.SchoolYearID ";
-$sql .= "AND T.SharkID = S.SharkID AND T.SchoolyearID = (:schoolyearid) ";
+$sql = "SELECT D.DealID,D.DealName,D.SharkID,D.TeamID,D.ClassID,D.TotalInvested,D.PercentOwned,D.Status, ";
+$sql .= "D.CreatedBy, D.CreatedDate,D.UpdatedBy, D.UpdatedDate, C.ClassID, C.ClassName,T.TeamName,  ";
+$sql .= "S.SharkID,S.SharkName ";
+$sql .= "from  Deal D,Team AS T,Class AS C,Shark AS S ";
+$sql .= "WHERE D.TeamID = T.TeamID AND D.ClassID = C.ClassID AND D.SharkID = S.SharkID ";
+$sql .= "AND D.ClassID = (:classid)  ";
 $query = $dbh -> prepare($sql);
 //$query-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);
-$query-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
+$query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
@@ -132,21 +137,22 @@ if($query->rowCount() > 0)
 foreach($results as $result)
 {				?>	
 										<tr>
-											<td><?php echo htmlentities($result->TeamID);?></td>
-											<td><?php echo htmlentities($result->TeamName);?></td>
-                                            <td><?php echo htmlentities($result->ClassName);?></td>
-											<td><?php echo htmlentities($result->YearName);?></td>
-                                            <td><?php echo htmlentities($result->SharkName) ;?></td>
-											<td><?php echo htmlentities($result->IGFollowers);?></td>
-                                            <td><?php echo htmlentities($result->credit);?></td>
-                                            <td><?php echo htmlentities($result->debit);?></td>
-                                            <td><?php echo htmlentities($result->balance);?> </td>
+											<td><?php echo htmlentities($result->DealName);?></td>
+											<td><?php echo htmlentities($result->SharkName);?></td>
+                                            <td><?php echo htmlentities($result->TeamName);?></td>
+											<td><?php echo htmlentities($result->ClassName);?></td>
+                                            <td><?php echo htmlentities($result->TotalInvested) ;?></td>
+											<td><?php echo htmlentities($result->PercentOwned);?></td>
+                                            <td><?php echo htmlentities($result->CreatedBy);?></td>
+                                            <td><?php echo htmlentities($result->CreatedDate);?></td>
+                                            <td><?php echo htmlentities($result->UpdatedBy);?></td>
+                                            <td><?php echo htmlentities($result->UpdatedDate);?></td>
                                            
 											
 <td>
-<a href="edit-team.php?edit=<?php echo $result->TeamID;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+<a href="edit-deal.php?edit=<?php echo $result->DealID;?>" onclick="return confirm('Do you want to Edit Deal');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
 
-<a href="teamlist.php?del=<?php echo $result->TeamID;?>&name=<?php echo htmlentities($result->TeamName);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
+<a href="deallist.php?del=<?php echo $result->TeamID;?>&name=<?php echo htmlentities($result->TeamName);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
 </td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>

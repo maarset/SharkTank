@@ -12,7 +12,8 @@
 			</li>
 			<li><a href="product.php"><i class="fa fa-user"></i> &nbsp;Products</a>
 			</li>
-			
+			<li><a href="deallist.php"><i class="fa fa-user"></i> &nbsp;Deals</a>
+			</li>
 			<li><a href="vendor.php"><i class="fa fa-user"></i> &nbsp;Vendor</a>
 			</li>
 			<li><a href="class.php"><i class="fa fa-user"></i> &nbsp;Class</a>
