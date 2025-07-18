@@ -2,64 +2,107 @@
 include('includes/config.php'); 
 if(isset($_POST['submit']))
 {
+    $ExistingUser = false;
+    $file = $_FILES['image']['name'];
+    $file_loc = $_FILES['image']['tmp_name'];
+    $folder="images/"; 
+    $new_file_name = strtolower($file);
+    $final_file=str_replace(' ','-',$new_file_name); 
 
-$file = $_FILES['image']['name'];
-$file_loc = $_FILES['image']['tmp_name'];
-$folder="images/"; 
-$new_file_name = strtolower($file);
-$final_file=str_replace(' ','-',$new_file_name); 
+    $name=$_POST['name'];
+    $email=$_POST['email'];
+    $password=md5($_POST['password']);
+    $gender=$_POST['gender'];
+    $mobileno=$_POST['mobileno'];
+    $designation=$_POST['designation'];
+        if(isset($_POST['team']))
+        {
+        $team=$_POST['team'];
+        }
+        if(move_uploaded_file($file_loc,$folder.$final_file))
+    	{
+    		$image=$final_file;
+        }
+    $notitype='Create Account';
+    $reciver='Admin';
+    $sender=$email;
 
-$name=$_POST['name'];
-$email=$_POST['email'];
-$password=md5($_POST['password']);
-$gender=$_POST['gender'];
-$mobileno=$_POST['mobileno'];
-$designation=$_POST['designation'];
-$team=$_POST['team'];
+        $sqlCheck = "SELECT U.id,U.TeamID,U.name,U.email, U.designation, U.Status FROM users U ";
+	    $sqlCheck .= "where U.email = :email AND U.ClassID = :classid ";
+	    $queryCheck = $dbh->prepare($sqlCheck);
+        $queryCheck-> bindParam(':email', $email, PDO::PARAM_STR);
+	    $queryCheck-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+	    $queryCheck->execute();
+	    $resultCheck=$queryCheck->fetch(PDO::FETCH_OBJ);
+	    if($queryCheck->rowCount() > 0)
+	    {
+	    	$ExistingUser = true; 
+	    }
+        else
+        {
+            $ExistingUser = false;
+        }
 
-if(move_uploaded_file($file_loc,$folder.$final_file))
-	{
-		$image=$final_file;
+    if ($ExistingUser == false)
+    {
+    $sqlnoti="insert into notification (notiuser,notireciver,notitype) values (:notiuser,:notireciver,:notitype)";
+    $querynoti = $dbh->prepare($sqlnoti);
+    $querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
+    $querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
+    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+    $querynoti->execute();    
+
+    $sql ="INSERT INTO users(name,email, password, gender, mobile, designation,";
+        if ($designation == "Student")
+        {
+            $sql .="TeamID,"; 
+        }
+    $sql .="image,ClassID, status)"; 
+
+    $sql .="VALUES(:name, :email, :password, :gender, :mobileno, :designation,";
+        if ($designation == "Student")
+        {
+        $sql .=":team,"; 
+        }
+    $sql .=":image,:classid, 1)";
+
+    $query= $dbh -> prepare($sql);
+    $query-> bindParam(':name', $name, PDO::PARAM_STR);
+    $query-> bindParam(':email', $email, PDO::PARAM_STR);
+    $query-> bindParam(':password', $password, PDO::PARAM_STR);
+    $query-> bindParam(':gender', $gender, PDO::PARAM_STR);
+    $query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
+    $query-> bindParam(':designation', $designation, PDO::PARAM_STR); 
+        if ($designation == "Student")
+        {
+        $query-> bindParam(':team', $team, PDO::PARAM_STR);
+        }
+    $query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+    $query-> bindParam(':image', $image, PDO::PARAM_STR);
+    $query->execute();
+    $lastInsertId = $dbh->lastInsertId();
+        if($lastInsertId)
+        {
+            	//mail.goatcrist.us
+        $to = $email;
+        $subject = "You have a message from Shark Tank";
+        $txt = "Congratulation you have registered with Lincoln Zebra Shark Tank http://goatcrist.us";
+        $headers = "From: " . $AdminEmail . " \r\n" . "CC: ". $AdminCC . " \r\n" . "BCC: ". $AdminBCC ;
+        mail($to,$subject,$txt,$headers);
+
+        echo "<script type='text/javascript'>alert('Registration Sucessfull!');</script>";
+       // echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
+        }
+        else 
+        {
+        $error="Something went wrong. Please try again";
+        }
     }
-$notitype='Create Account';
-$reciver='Admin';
-$sender=$email;
-
-$sqlnoti="insert into notification (notiuser,notireciver,notitype) values (:notiuser,:notireciver,:notitype)";
-$querynoti = $dbh->prepare($sqlnoti);
-$querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
-$querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
-$querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-$querynoti->execute();    
-    
-$sql ="INSERT INTO users(name,email, password, gender, mobile, designation, TeamID, image, status) VALUES(:name, :email, :password, :gender, :mobileno, :designation,:team, :image, 1)";
-$query= $dbh -> prepare($sql);
-$query-> bindParam(':name', $name, PDO::PARAM_STR);
-$query-> bindParam(':email', $email, PDO::PARAM_STR);
-$query-> bindParam(':password', $password, PDO::PARAM_STR);
-$query-> bindParam(':gender', $gender, PDO::PARAM_STR);
-$query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
-$query-> bindParam(':designation', $designation, PDO::PARAM_STR); 
-$query-> bindParam(':team', $team, PDO::PARAM_STR);
-$query-> bindParam(':image', $image, PDO::PARAM_STR);
-$query->execute();
-$lastInsertId = $dbh->lastInsertId();
-if($lastInsertId)
-{
-    	//mail.goatcrist.us
-$to = $email;
-$subject = "You have a message from Shark Tank";
-$txt = "Congratulation you have registered with Lincoln Zebra Shark Tank http://goatcrist.us";
-$headers = "From: " . $AdminEmail . " \r\n" . "CC: ". $AdminCC . " \r\n" . "BCC: ". $AdminBCC ;
-mail($to,$subject,$txt,$headers);
-
-echo "<script type='text/javascript'>alert('Registration Sucessfull!');</script>";
-echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
-}
-else 
-{
-$error="Something went wrong. Please try again";
-}
+    else
+    {
+        echo "<script type='text/javascript'>alert('There is already a user with that email!');</script>";
+      //  echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
+    }
 
 }
 
@@ -144,7 +187,11 @@ $results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
 
                             <label class="col-sm-1 control-label">Designation<span style="color:red">*</span></label>
                             <div class="col-sm-5">
-                            <input type="text" name="designation" class="form-control" required>
+                            <select name="designation" id="designation" class="form-control" required>
+                            <option value="">Select</option>
+                            <option value="Student">Student</option>
+                            <option value="Shark">Shark</option>
+                            </select>
                             </div>
                             </div>
 
@@ -173,7 +220,7 @@ $results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
                             <label class="col-sm-1 control-label">Team<span style="color:red">*</span></label>
                             <div class="col-sm-5">
                             <div>
-                                <select name="team" class="form-control" required>
+                                <select name="team" id="team" class="form-control" required>
                                 <option value=''>SELECT</option>
                             <?php
                             foreach($results as $result)    
@@ -212,6 +259,21 @@ $results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
 	<script src="js/main.js"></script>
-
+<script type="text/javascript">
+ $("#designation").change(function () {
+        var desg = $("#designation").val();
+        //alert("DESIGNATION = "+ desg);
+        //window.open("http://localhost:8080/dashboard/PDOWork.php?TeamID=" + teamid);
+        //location.href = "ledger.php?TeamID=" + teamid;
+        if (desg == "Shark") {
+            $('#team').attr('disabled', true);
+        } else {
+            $('#team').attr('disabled', false);
+        }
+        });
+$(document).ready(function () {   
+    
+});
+</script>
 </body>
 </html>

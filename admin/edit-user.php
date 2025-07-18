@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start(); 
  
 ini_set('display_errors', '1');
 include('includes/config.php');
@@ -46,7 +46,11 @@ if(isset($_POST['submit']))
 			$image=$final_file;
 		}
 
-	$sql="UPDATE users SET name=(:name), email=(:email), gender=(:gender), mobile=(:mobileno), designation=(:designation), Image=(:image), TeamID=(:TeamID) ";
+	$sql="UPDATE users SET name=(:name), email=(:email), gender=(:gender), mobile=(:mobileno), designation=(:designation), Image=(:image) ";
+	if ($designation == "Student")
+	{
+		 $sql .= ",TeamID=(:TeamID) ";
+	}
 	if ($passwordreset == "true")
 	{
 		$sql .= ",password=(:password) ";	
@@ -60,7 +64,10 @@ if(isset($_POST['submit']))
 	$query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
 	$query-> bindParam(':designation', $designation, PDO::PARAM_STR);
 	$query-> bindParam(':image', $image, PDO::PARAM_STR);
+	if ($designation == "Student")
+	{
 	$query-> bindParam(':TeamID', $TeamID, PDO::PARAM_STR);
+	}
 	$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
 	if ($passwordreset == "true")
 	{
@@ -79,7 +86,7 @@ if ($passwordreset == "true")
 	mail($to,$subject,$txt,$headers);
 	$msg .= " Email sent to ".$email . " with new password. ";
 	}
-	$msg.=" Information Updated Successfully";
+	$msg.=" Information Updated Successfully " .$description;
 }    
 ?>
 
@@ -205,7 +212,26 @@ if ($passwordreset == "true")
 </div>
 <label class="col-sm-2 control-label">Designation<span style="color:red">*</span></label>
 <div class="col-sm-4">
-<input type="text" name="designation" class="form-control" required value="<?php echo htmlentities($result->designation);?>">
+<select name="designation" id="designation" class="form-control" required>
+                            <option value="">Select</option>
+						<?php if ($result->designation == "Student")
+						{ 
+							echo ("<option value='Student' SELECTED>Student</option>");
+						}
+						else
+						{
+							echo ("<option value='Student'>Student</option>");
+						}
+						if ($result->designation == "Shark")
+						{ 
+							echo ("<option value='Shark' SELECTED>Shark</option>");
+						}
+						else
+						{
+							echo ("<option value='Shark'>Shark</option>");
+						}
+						?>
+                            </select>
 </div>
 </div>
 
@@ -236,8 +262,16 @@ if ($passwordreset == "true")
 			$queryT->execute();
 			$resultT=$queryT->fetchAll(PDO::FETCH_OBJ);
 			$cntT=1;	
+			if ($result->designation == "Student")
+			{
 			?>
 			<select name="TeamID" class="form-control" required>
+				<?php
+			}
+			else
+			{ ?>
+			<select name="TeamID" class="form-control">
+			<?php } ?>
         	<option value="">Select</option>
 			<?php
 				foreach($resultT as $res)

@@ -59,6 +59,7 @@ PRIMARY KEY (ClassID)
 CREATE TABLE Shark (
     SharkID INT(16) AUTO_INCREMENT,
     SharkName VARCHAR(255),
+    email varchar(255),
     Status INT,
     CreatedBy VARCHAR(255),
     CreatedDate DATETIME,
@@ -70,6 +71,8 @@ CREATE TABLE Shark (
 ALTER TABLE Shark DROP COLUMN FirstName;
 ALTER TABLE Shark DROP COLUMN LastName;
 ALTER TABLE Shark ADD SharkName   varchar(255);
+
+ALTER TABLE Shark ADD email varchar(255);
 */
 
 
@@ -116,8 +119,10 @@ FOREIGN KEY (ClassID) REFERENCES Class(ClassID),
 PRIMARY KEY (DealID)
 );
 
+/*
 ALTER TABLE Deal DROP COLUMN totalInvested;
 ALTER TABLE Deal ADD TotalInvested   decimal(15,2);
+*/
 
 CREATE TABLE DealHistory (
 DealHistoryID  int(16) auto_increment,
@@ -156,9 +161,15 @@ CREATE TABLE `users` (
   `status` int(10) NOT NULL
   );
   ALTER TABLE users ADD FOREIGN KEY (TeamID) references Team(TeamID);
+  ALTER TABLE users ADD FOREIGN KEY (ClassID) references Class(ClassID);
  ALTER TABLE `users`  ADD PRIMARY KEY (`id`);
 ALTER TABLE `users`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
+/*
+ALTER TABLE users ADD ClassID   int;
+ALTER TABLE users ADD FOREIGN KEY (ClassID) references Class(ClassID);
+update users set ClassID = 1
+*/
 CREATE TABLE `admin` (
   `id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,

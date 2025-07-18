@@ -22,7 +22,7 @@ else{
 	<meta name="theme-color" content="#3e454c">
 	<?php
 $email = $_SESSION['alogin'];
-$sqlT = "SELECT U.TeamID,T.TeamName FROM users AS U, Team AS T WHERE U.TeamID = T.TeamID AND U.email = (:email) AND T.ClassID = (:classid)";
+$sqlT = "SELECT U.TeamID,U.designation,T.TeamName FROM users AS U, Team AS T WHERE U.TeamID = T.TeamID AND U.email = (:email) AND T.ClassID = (:classid)";
 $queryT = $dbh -> prepare($sqlT);
 $queryT-> bindParam(':email', $email, PDO::PARAM_STR);
 $queryT-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
@@ -30,7 +30,7 @@ $queryT->execute();
 $resultT=$queryT->fetch(PDO::FETCH_OBJ);
 $TeamID = $resultT->TeamID;
 $TeamName = $resultT->TeamName;
-
+$Designation = $resultT->designation;
 
 
 ?>
@@ -93,7 +93,7 @@ th { white-space: nowrap; }
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Transactions <a href="new-ledger.php">New</a></div>
+							<div class="panel-heading">List Transactions <?php if ($Designation == "Student") { ?><a href="new-ledger.php">New</a><?php } ?></div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>

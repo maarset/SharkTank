@@ -17,50 +17,69 @@ else{
 	
 if(isset($_POST['submit']))
   {
-
+    $ExistingDeal = false;
 	$DealName=$_POST['DealName'];
 	$SharkID=$_POST['SharkID'];
 	$TeamID=$_POST['TeamID'];
 	$TotalInvested=$_POST['TotalInvested'];
 	$PercentOwned=$_POST['PercentOwned'];   //$SchoolYearIDGlobal
 
-
-
-	$sqlI = "INSERT INTO Deal (DealName,SharkID,TeamID,ClassID,TotalInvested,PercentOwned,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) ";
-	$sqlI .= " VALUES         (:dealname,:sharkid,:teamid,:classid,:totalinvested,:percentowned,1,:createdby,now(3),:updatedby,now(3))";
-	$sqlH = "INSERT INTO DealHistory (DealID,DealName,SharkID,TeamID,ClassID,TotalInvested,PercentOwned,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) ";
-	$sqlH .= " VALUES         (:dealid,:dealname,:sharkid,:teamid,:classid,:totalinvested,:percentowned,1,:createdby,now(3)	,:updatedby,now(3))";
-	$queryI = $dbh->prepare($sqlI);
-	
-	$queryI-> bindParam(':dealname', $DealName, PDO::PARAM_STR);
-	$queryI-> bindParam(':sharkid', $SharkID, PDO::PARAM_STR);
-	$queryI-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-	$queryI-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-	$queryI-> bindParam(':totalinvested', $TotalInvested, PDO::PARAM_STR);
-	$queryI-> bindParam(':percentowned', $PercentOwned, PDO::PARAM_STR);
-	$queryI-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
-	$queryI-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
-	$queryI->execute();
-	$lastInsertId = $dbh->lastInsertId();
-	if($lastInsertId)
+	$sqlCheck = "SELECT D.DealID, D.DealName, D.SharkID, D.TeamID, D.ClassID, T.TeamName, D.Status FROM Deal D, Team T ";
+	$sqlCheck .= "where D.TeamID = T.TeamID AND D.ClassID = :classid AND D.TeamID = :teamid ";
+	$queryCheck = $dbh->prepare($sqlCheck);
+	$queryCheck-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+	$queryCheck-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+	$queryCheck->execute();
+	$resultCheck=$queryCheck->fetch(PDO::FETCH_OBJ);
+	if($queryCheck->rowCount() > 0)
 	{
-		$queryH = $dbh->prepare($sqlH);
-		$queryH-> bindParam(':dealid', $lastInsertId, PDO::PARAM_STR);
-		$queryH-> bindParam(':dealname', $DealName, PDO::PARAM_STR);
-		$queryH-> bindParam(':sharkid', $SharkID, PDO::PARAM_STR);
-		$queryH-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-		$queryH-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-		$queryH-> bindParam(':totalinvested', $TotalInvested, PDO::PARAM_STR);
-		$queryH-> bindParam(':percentowned', $PercentOwned, PDO::PARAM_STR);
-		$queryH-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
-		$queryH-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
-		$queryH->execute();
-	echo "<script type='text/javascript'>alert('Team Added Sucessfully!');</script>";
-	echo "<script type='text/javascript'> document.location = 'deallist.php'; </script>";
+		$ExistingDeal = true; 
 	}
-	else 
+
+	if ($ExistingDeal == false)
 	{
-	$error="Something went wrong. Please try again";
+		$sqlI = "INSERT INTO Deal (DealName,SharkID,TeamID,ClassID,TotalInvested,PercentOwned,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) ";
+		$sqlI .= " VALUES         (:dealname,:sharkid,:teamid,:classid,:totalinvested,:percentowned,1,:createdby,now(3),:updatedby,now(3))";
+		$sqlH = "INSERT INTO DealHistory (DealID,DealName,SharkID,TeamID,ClassID,TotalInvested,PercentOwned,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) ";
+		$sqlH .= " VALUES         (:dealid,:dealname,:sharkid,:teamid,:classid,:totalinvested,:percentowned,1,:createdby,now(3)	,:updatedby,now(3))";
+		$queryI = $dbh->prepare($sqlI);
+		
+		$queryI-> bindParam(':dealname', $DealName, PDO::PARAM_STR);
+		$queryI-> bindParam(':sharkid', $SharkID, PDO::PARAM_STR);
+		$queryI-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+		$queryI-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+		$queryI-> bindParam(':totalinvested', $TotalInvested, PDO::PARAM_STR);
+		$queryI-> bindParam(':percentowned', $PercentOwned, PDO::PARAM_STR);
+		$queryI-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
+		$queryI-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
+		$queryI->execute();
+		$lastInsertId = $dbh->lastInsertId();
+		if($lastInsertId)
+		{
+			$queryH = $dbh->prepare($sqlH);
+			$queryH-> bindParam(':dealid', $lastInsertId, PDO::PARAM_STR);
+			$queryH-> bindParam(':dealname', $DealName, PDO::PARAM_STR);
+			$queryH-> bindParam(':sharkid', $SharkID, PDO::PARAM_STR);
+			$queryH-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+			$queryH-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+			$queryH-> bindParam(':totalinvested', $TotalInvested, PDO::PARAM_STR);
+			$queryH-> bindParam(':percentowned', $PercentOwned, PDO::PARAM_STR);
+			$queryH-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
+			$queryH-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
+			$queryH->execute();
+			echo "<script type='text/javascript'>alert('Team Added Sucessfully!');</script>";
+			echo "<script type='text/javascript'> document.location = 'deallist.php'; </script>";
+		}
+		else 
+		{
+			$error="Something went wrong. Please try again";
+		}
+
+	}
+	else
+	{
+		$error="Team ".$resultCheck->TeamName." already has a deal."; 
+		echo "<script type='text/javascript'>alert('Team '.$resultCheck->TeamName.' already has a deal.');</script>";
 	}
 }    
 ?>

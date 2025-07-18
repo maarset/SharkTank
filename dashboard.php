@@ -148,7 +148,7 @@ $teamname = $resultsTT->TeamName;
 									<div class="col-md-4">
 										<div class="panel panel-default">
 											<div class="stat-panel-number h3 text-center">Company Output </div>
-												<div class="panel-body <?php echo($bk[$x]) ?>">
+												<div class="panel-body ">
 												
 												<div class="stat-panel text-left">
 												<?php 											
@@ -173,7 +173,7 @@ $teamname = $resultsTT->TeamName;
 													$P2Amt = $resultP2->P2;
 													$P3Amt = $resultP3->P3;
 												?> 
-													<table class=" table  " cellspacing="0" width="50%">
+													<table  class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="80%">
 													<TR><TD>Retail Margin: </TD><TD><?php echo htmlentities('$'.$resultP->RetailPrice - $resultP->InputCost );?></td></tr>
 													<TR><TD>Wholesale Margins: </TD><TD><?php echo htmlentities('$'.$resultP->WholeSalePrice - $resultP->InputCost );?></td></tr>
 													<TR><TD>Retail Total: </TD><TD><?php echo htmlentities('$'.($resultP->RetailPrice - $resultP->InputCost ) * ($resultP->QtySoldRetail)  );?></td></tr>
@@ -188,14 +188,14 @@ $teamname = $resultsTT->TeamName;
 												$TotalValue = (($P1Amt * 72.5) + ($P2Amt * 55.1) + ($P3Amt * 20) + ($S28 * 80) + ($S32 * 60));
 												}
 												?>
-													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?></div>  
+													<div class="stat-panel-title text-uppercase"><strong>Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?></strong></div>  
 												</div>
 											</div>
 										</div>
 									</div>
 									<?php
 									//$sql5 = "SELECT AVG(L.Amount) AS AVG,month(L.dateentered) AS MONTH,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount <> 0  group by month(L.dateentered) ORDER BY month(L.dateentered) asc";
-									$sql5 = "SELECT AVG(L.Amount) AS AVG,week(L.dateentered) AS WEEK,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount < 0  group by week(L.dateentered) ORDER BY week(L.dateentered) asc";
+									$sql5 = "SELECT AVG(L.Amount) AS AVG,week(L.dateentered) AS WEEK,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount < 0  group by week(L.dateentered) ORDER BY L.dateentered asc";
 									$query5 = $dbh -> prepare($sql5);
 									$query5-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
 									$query5->execute();
@@ -208,7 +208,7 @@ $teamname = $resultsTT->TeamName;
 												<table id="LedgerAVG" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="80%">
 													<thead>
 													<tr>
-														<th width="10%">Week</th>
+														<th width="10%">Week Date</th>
 														<th width="20%">Average Expenses</th>	
 													</tr>
 													</thead>
@@ -218,7 +218,9 @@ $teamname = $resultsTT->TeamName;
 																	foreach($result5 as $res5)
 																	{
 																	echo('<TR>');
-																		echo('<TD>'. $res5->WEEK . ':</td>  <TD>$' . number_format((float)$res5->AVG, 2, '.', '')  . '</TD>');
+																	$d = new DateTime($res5->dateentered);
+																		echo('<TD>'. $d->format('m-d-Y') . ':</td>');
+																		echo('<TD>$' . number_format((float)$res5->AVG, 2, '.', '')  . '</TD>');
 																	echo('</TR>');
 																	}
 
@@ -261,15 +263,26 @@ $teamname = $resultsTT->TeamName;
 											$query3->execute();
 											$result3=$query3->fetchAll(PDO::FETCH_OBJ);
 
-
+											$DealExists = false;
 											$sql4 = "SELECT D.DealID,D.DealName,D.PercentOwned,D.TotalInvested,S.SharkName ";
 											$sql4 .= "FROM Deal AS D, Shark AS S WHERE D.SharkID = S.SharkID AND D.Status = 1 AND D.TeamID = (:teamid)";
 											$query4 = $dbh -> prepare($sql4);
 											$query4-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
 											$query4->execute();
 											$result4=$query4->fetch(PDO::FETCH_OBJ);
+											if($query4->rowCount() > 0)
+												{
+													$DealExists = true;
+												}
 											?>
+											<?php
+											if ($DealExists == true)
+											{ ?>
 											<div class="stat-panel-number h3 text-center"> SHARK <?php echo($result4->SharkName ); ?> </div>
+											<?php
+											} ?>
+												
+											
 											<table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="40%">
 											<thead>
 												<tr>
@@ -285,7 +298,9 @@ $teamname = $resultsTT->TeamName;
 											foreach($result1 as $res1)
 											{
 											echo('<TR>');
-											echo( '<td>'.$res1->Description . ':</td>  <TD>$' . $res1->Amount . '</td><TD>' . $res1->DateEntered . '</TD>');
+											echo( '<td>'.$res1->Description . ':</td>  <TD>$' . $res1->Amount . '</td>');
+											$d = new DateTime($res1->DateEntered);
+											echo('<TD>'. $d->format('m-d-Y') . ':</td>');
 											echo('</tr>');
 											}
 											$cnt = 1;
@@ -293,7 +308,9 @@ $teamname = $resultsTT->TeamName;
 											foreach($result2 as $res2)
 											{
 											echo('<TR>');
-											echo( '<TD>'.$res2->Description . '#'.$cnt.':</TD><TD>  $' . $res2->Amount . ' </TD><TD>' . $res2->DateEntered . '</TD>');
+											echo( '<TD>'.$res2->Description . '#'.$cnt.':</TD><TD>  $' . $res2->Amount . ' </TD>');
+											$d = new DateTime($res2->DateEntered);
+											echo('<TD>' . $d->format('m-d-Y') . '</TD>');
 											echo('</tr>');
 											$cnt++;
 											}
@@ -308,26 +325,31 @@ $teamname = $resultsTT->TeamName;
 											?>
 											</tfoot>
 											</table>
+											<?php
+											if ($DealExists == true)
+											{ ?>
 											<table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="40%">
 											<thead>
 												<thead>
 												<tr><TH></TH><TH></TH></TR>
 												</thead>
 											<tbody>
-													<td>Total Invested</td>
-													<td>$<?php echo($result4->TotalInvested); ?> </td> <!-- WILL BE ABLE TO GET FROM SHARK TABLE -->
+													<td>Shark Total Invested</td>
+													<td>$<?php echo($result4->TotalInvested); ?> </td> 
 												</tr>
 												<tr>
-													<td>Percent Owned</td>
-													<td><?php echo($result4->PercentOwned); ?>%</td> <!-- WILL BE ABLE TO GET FROM SHARK TABLE -->
+													<td>Shark Company Percent Owned</td>
+													<td><?php echo($result4->PercentOwned); ?>%</td> 
 												</tr>
 												<tr>
 													<td>Shark Project ROI</td>
-													<td><?php echo htmlentities('$'. number_format(abs(($TotalValue * $result4->PercentOwned) - ($result4->TotalInvested)), 2, '.', ',') );?></td> 
+													<td><?php echo htmlentities('$'. number_format(abs(($TotalValue * (floatval($result4->PercentOwned) / 100.00) ) - ($result4->TotalInvested)), 2, '.', ',') );?></td> 
 												</tr>
 										</tbody>
 										</table>
-											
+											<?php
+											}
+											?>
 											
 										</div>
 									</div>

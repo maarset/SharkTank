@@ -79,7 +79,7 @@ $query -> execute();
 
 </head>
 
-<body>
+<body> 
 	<?php include('includes/header.php');?>
 
 	<div class="ts-main-content"> 

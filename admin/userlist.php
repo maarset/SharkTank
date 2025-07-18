@@ -10,7 +10,7 @@ header('location:index.php');
 else{
 if(isset($_GET['del']) && isset($_GET['name']))
 {
-$id=$_GET['del'];
+$id=$_GET['del']; 
 $name=$_GET['name'];
 
 $sql = "delete from users WHERE id=:id";
@@ -123,7 +123,7 @@ if(isset($_REQUEST['unconfirm']))
 						
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Users</div>
+							<div class="panel-heading">List Users</div> 
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
@@ -145,16 +145,16 @@ if(isset($_REQUEST['unconfirm']))
 									
 									<tbody>
 
-<?php $sql = "SELECT u.id,u.TeamID,t.TeamName,u.name,u.email,u.gender,u.mobile,u.designation,u.image,u.status from  users AS u,Team AS t WHERE t.TeamID = u.TeamID AND t.ClassID = (:ClassID)  ";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $result)
-{				?>	
+									<?php $sql = "SELECT u.id,u.TeamID,t.TeamName,u.name,u.email,u.gender,u.mobile,u.designation,u.image,u.status from  users AS u,Team AS t WHERE t.TeamID = u.TeamID AND t.ClassID = (:ClassID)  ";
+									$query = $dbh -> prepare($sql);
+									$query-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);
+									$query->execute();
+									$results=$query->fetchAll(PDO::FETCH_OBJ);
+									$cnt=1;
+									if($query->rowCount() > 0)
+									{
+									foreach($results as $result)
+									{				?>	
 										<tr>
 											<td><?php echo htmlentities($cnt);?></td>
 											<td><img src="../images/<?php echo htmlentities($result->image);?>" style="width:50px; border-radius:50%;"/></td>
@@ -172,13 +172,11 @@ foreach($results as $result)
                                                     <?php } else {?>
                                                     <a href="userlist.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
                                                     <?php } ?>
-</td>
-                                          
-											
-<td>
-<a href="edit-user.php?edit=<?php echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
-<a href="userlist.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
-</td>
+											</td>												
+											<td>
+											<a href="edit-user.php?edit=<?php echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+											<a href="userlist.php?del=<?php echo $result->id;?>&name=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
+											</td>
 										</tr>
 										<?php $cnt=$cnt+1; }} ?>
 										
@@ -186,7 +184,73 @@ foreach($results as $result)
 								</table>
 							</div>
 						</div>
+					
+
+
+					<div class="panel panel-default">
+						<div class="panel-heading">List Sharks</div> 
+						<div class="panel-body">
+							<table id="zctb" class="display table table-striped table-bordered table-hover" cellspacing="0" width="100%">
+									<thead>
+										<tr>
+										<th>#</th>
+												<th>Image</th>
+                                                <th>Name</th>
+												<th>Team</th>
+                                                <th>Email</th>
+                                                <th>Gender</th>
+                                                <th>Phone</th>
+                                                <th>Designation</th>
+                                                <th>Account</th>
+											<th>Action</th>	
+										</tr>
+									</thead>
+									
+									<tbody>
+
+									<?php $sqlS = "SELECT u.id,u.TeamID,'' AS TeamName,u.name,u.email,u.gender,u.mobile,u.designation,u.image,u.status ";
+									$sqlS .= "from  users AS u WHERE u.designation = 'Shark' AND u.ClassID = (:ClassID)  ";
+									$queryS = $dbh -> prepare($sqlS);
+									$queryS-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);
+									$queryS->execute();
+									$resultsS=$queryS->fetchAll(PDO::FETCH_OBJ);
+									$cnt=1;
+									if($queryS->rowCount() > 0)
+									{
+									foreach($resultsS as $resultS)
+									{				?>	
+										<tr>
+											<td><?php echo htmlentities($cnt);?></td>
+											<td><img src="../images/<?php echo htmlentities($resultS->image);?>" style="width:50px; border-radius:50%;"/></td>
+                                            <td><?php echo htmlentities($resultS->name);?></td>
+											<td><?php echo htmlentities($resultS->TeamName);?></td>
+                                            <td><?php echo htmlentities($resultS->email);?></td>
+                                            <td><?php echo htmlentities($resultS->gender);?></td>
+                                            <td><?php echo htmlentities($resultS->mobile);?></td>
+                                            <td><?php echo htmlentities($resultS->designation);?> 
+                                            <td>
+                                            
+                                            <?php if($result->status == 1)
+                                                    {?>
+                                                    <a href="userlist.php?confirm=<?php echo htmlentities($resultS->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
+                                                    <?php } else {?>
+                                                    <a href="userlist.php?unconfirm=<?php echo htmlentities($resultS->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
+                                                    <?php } ?>
+											</td>												
+											<td>
+											<a href="edit-user.php?edit=<?php echo $resultS->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;
+											<a href="userlist.php?del=<?php echo $resultS->id;?>&name=<?php echo htmlentities($resultS->email);?>" onclick="return confirm('Do you want to Delete');"><i class="fa fa-trash" style="color:red"></i></a>&nbsp;&nbsp;
+											</td>
+										</tr>
+										<?php $cnt=$cnt+1; }} ?>
+										
+									</tbody>
+								</table>
+						</div>
 					</div>
+
+
+
 				</div>
 
 			</div>

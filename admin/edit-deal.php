@@ -132,33 +132,31 @@ if(isset($_POST['submit']))
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
-									<div class="panel-body">
-<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
-	<input type="hidden" name="DealID" value="<?php echo htmlentities($result->DealID); ?>">
+	<div class="panel-body">
+	<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
+		<input type="hidden" name="DealID" value="<?php echo htmlentities($result->DealID); ?>">
 
-	<input type="hidden" name="SharkID" value="<?php echo htmlentities($result->SharkID); ?>">
-	<input type="hidden" name="TeamID" value="<?php echo htmlentities($result->TeamID); ?>">
-	<input type="hidden" name="ClassID" value="<?php echo htmlentities($result->ClassID); ?>">
+		<input type="hidden" name="SharkID" value="<?php echo htmlentities($result->SharkID); ?>">
+		<input type="hidden" name="TeamID" value="<?php echo htmlentities($result->TeamID); ?>">
+		<input type="hidden" name="ClassID" value="<?php echo htmlentities($result->ClassID); ?>">
 
-<div class="form-group">
-	<label class="col-sm-2 control-label">Deal Name<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-		<input type="text" name="DealName" style="Width:300px"  class="form-control" required value="<?php echo htmlentities($result->DealName);?>">
-	</div>
-		<label class="col-sm-2 control-label">Total Invested<span style="color:red">*</span></label>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">Deal Name<span style="color:red">*</span></label>
+		<div class="col-sm-4">
+			<input type="text" name="DealName" style="Width:300px"  class="form-control" required value="<?php echo htmlentities($result->DealName);?>">
+		</div>
+			<label class="col-sm-2 control-label">Total Invested<span style="color:red">*</span></label>
 
-	<div class="col-sm-4">
-		<input type="text" name="TotalInvested" style="Width:200px"  class="form-control" required value="<?php echo htmlentities($result->TotalInvested);?>">
-	</div>
-	<label class="col-sm-2 control-label">Percent Owned<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-		<input type="text" name="PercentOwned" style="Width:200px"  class="form-control" required value="<?php echo htmlentities($result->PercentOwned);?>">
-	</div>
-		
+		<div class="col-sm-4">
+			<input type="text" name="TotalInvested" style="Width:200px"  class="form-control" required value="<?php echo htmlentities($result->TotalInvested);?>">
+		</div>
+		<label class="col-sm-2 control-label">Percent Owned<span style="color:red">*</span></label>
+		<div class="col-sm-4">
+			<input type="text" name="PercentOwned" style="Width:200px"  class="form-control" required value="<?php echo htmlentities($result->PercentOwned);?>">
+		</div>
 			
-</div><!-- END FORM GROUP-->
-
-	
+				
+	</div><!-- END FORM GROUP-->
 </div>
 
 
@@ -174,6 +172,41 @@ if(isset($_POST['submit']))
 	<div class="col-sm-8 col-sm-offset-2">
 		<button class="btn btn-primary" name="submit" type="submit">Save Changes</button>
 		<button class="btn btn-cancel" onclick="history.go(-1); return false;" name="cancel" type="cancel">Cancel</button>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-10">
+<?php
+	$sqlH = "SELECT DealHistoryID,DealID,DealName,TotalInvested,PercentOwned,CreatedBy,CreatedDate from  DealHistory WHERE TeamID = (:dealid) ORDER BY DealHistoryID";
+	$queryH = $dbh -> prepare($sqlH);
+	$queryH-> bindParam(':dealid', $result->DealID, PDO::PARAM_STR);
+	$queryH->execute();
+	$resultH=$queryH->fetchAll(PDO::FETCH_OBJ);
+?>
+<div class="stat-panel-number h3 text-left"> Deal History for  <?php echo($resultH[0]->DealName ); ?> </div>
+<table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="40%">
+	<thead>
+		<tr>
+			<th width="20px";>Created Date</th>
+			<th width="40px";>Deal Name</th>
+			<th width="20px";>Total Invested</th>
+			<th width="10px";>PercentOwned</th>
+			<th width="20px";>Created By</th>
+				
+		</tr>
+	</thead>
+	<tbody>
+	<?php
+	foreach($resultH as $res1)
+	{
+	echo('<TR>');
+	echo( '<TD>' . $res1->CreatedDate . '</TD><td>'.$res1->DealName . ':</td>  <TD>$' . $res1->TotalInvested . '</td><TD>' . $res1->PercentOwned . '</TD><TD>' . $res1->CreatedBy . '</TD>');
+	echo('</tr>');
+	}
+	?>
+	</tbody>
+</table>
 	</div>
 </div>
 

@@ -1,4 +1,4 @@
-<?php
+<?php 
 session_start();
 
 ini_set('display_errors', '1');
@@ -10,60 +10,31 @@ header('location:index.php');
 }
 else {
 
-if(isset($_GET['ClassID'])) 
+if(isset($_GET['SharkID'])) 
 	{
-		$classid=$_GET['ClassID'];
+		$sharkid=$_GET['SharkID'];
 
-		
-
-
-	
 if(isset($_POST['submit']))
   {
 
-	//$ClassID=$_POST['ClassID'];
-	$ClassName=$_POST['ClassName'];
-	$Room=$_POST['Room'];
-	$SchoolYearID=$_POST['SchoolYearID'];
+	$classid=$_POST['ClassID'];
+	$sharkname=$_POST['SharkName'];
+	$email=$_POST['email'];
 
-if(isset($_POST['CurrentClass']))
-{
-	$CurrentClass=$_POST['CurrentClass'];//
-	echo('CURRENT CLASS = '.$CurrentClass);
-	if ($CurrentClass == "TRUE")
-	{
-		if ($classid != $ClassIDGlobal || $SchoolYearID != $SchoolYearIDGlobal)
-		{
-			$sqlG = "UPDATE Setting SET Value = (:currentclass) WHERE Name = 'CurrentClassID'";
-			$queryG = $dbh->prepare($sqlG);
-			$queryG-> bindParam(':currentclass', $classid, PDO::PARAM_STR);
-			$queryG->execute();
-
-			$sqlG1 = "UPDATE Setting SET Value = (:schoolyearid) WHERE Name = 'CurrentSchoolYearID'";
-			$queryG1 = $dbh->prepare($sqlG1);
-			$queryG1-> bindParam(':schoolyearid', $SchoolYearID, PDO::PARAM_STR);
-			$queryG1->execute();
-
-
-		}
-	}
-}	
-
-	
-
-	$sql="UPDATE Class SET ClassName=(:classname), Room=(:room), SchoolYearID=(:schoolyearid),UpdatedBy = (:updatedby),UpdatedDate = now(3) WHERE ClassID=(:classid)";
+	$sql="UPDATE Shark SET SharkName=(:sharkname), email=(:email), ClassID=(:classid),UpdatedBy = (:updatedby),UpdatedDate = now(3) WHERE SharkID=(:sharkid)";
 	$query = $dbh->prepare($sql);
-	$query-> bindParam(':classname', $ClassName, PDO::PARAM_STR);
-	$query-> bindParam(':room', $Room, PDO::PARAM_STR);
-	$query-> bindParam(':schoolyearid', $SchoolYearID, PDO::PARAM_STR);
-	$query-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
+	$query-> bindParam(':sharkname', $sharkname, PDO::PARAM_STR);
+	$query-> bindParam(':email', $email, PDO::PARAM_STR);
 	$query-> bindParam(':classid', $classid, PDO::PARAM_STR);
+	$query-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
+	$query-> bindParam(':sharkid', $sharkid, PDO::PARAM_STR);
+	
 	$query->execute();
 
 
 
-	$msg="Class Updated Successfully |" . $CurrentClass . "|";
-	echo "<script type='text/javascript'> document.location = 'class.php'; </script>";
+	$msg="Shark Updated Successfully ";
+	echo "<script type='text/javascript'> document.location = 'sharklist.php'; </script>";
 }    
 ?>
 
@@ -78,7 +49,7 @@ if(isset($_POST['CurrentClass']))
 	<meta name="author" content="">
 	<meta name="theme-color" content="#3e454c">
 	
-	<title>Edit Class</title>
+	<title>Edit Shark</title>
 
 	<!-- Font awesome -->
 	<link rel="stylesheet" href="css/font-awesome.min.css">
@@ -96,8 +67,6 @@ if(isset($_POST['CurrentClass']))
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<!-- Admin Stye -->
 	<link rel="stylesheet" href="css/style.css">
-
-	<script type= "text/javascript" src="../vendor/countries.js"></script> 
 	<style>
 .errorWrap {
     padding: 10px;
@@ -120,9 +89,10 @@ if(isset($_POST['CurrentClass']))
 
 <body>
 <?php
-		$sqlL = "SELECT ClassID,ClassName,Room,SchoolYearID,Status,UpdatedBy,UpdatedDate,CreatedBy,CreatedDate FROM Class WHERE ClassID = (:classid)";
+		$sqlL = "SELECT S.SharkID,C.ClassID,S.SharkName,S.email,S.Status,S.UpdatedBy,S.UpdatedDate,S.CreatedBy,S.CreatedDate ";
+		$sqlL .= "FROM Shark S, Class C WHERE S.ClassID = C.ClassID AND SharkID = (:sharkid)";
     $queryL = $dbh -> prepare($sqlL);
-    $queryL-> bindParam(':classid', $classid, PDO::PARAM_STR);
+    $queryL-> bindParam(':sharkid', $sharkid, PDO::PARAM_STR);
     $queryL->execute();
     $resultL=$queryL->fetch(PDO::FETCH_OBJ);
     if($queryL->rowCount() > 0)
@@ -138,7 +108,7 @@ if(isset($_POST['CurrentClass']))
 		<div class="container-fluid">
 			<div class="row">
 				<div class="col-md-12">
-					<h3 class="page-title">Edit Class : <?php echo htmlentities($resultL->ClassName); ?></h3>
+					<h3 class="page-title">Edit Shark : <?php echo htmlentities($resultL->SharkName); ?></h3>
 					<div class="row">
 						<div class="col-md-12">
 							<div class="panel panel-default">
@@ -148,58 +118,46 @@ if(isset($_POST['CurrentClass']))
 
 								<div class="panel-body">
 									<form method="post" class="form-horizontal" enctype="multipart/form-data" name="imgform">
-									<div class="form-group"><label class="col-sm-2 control-label">School Year<span style="color:red">*</span></label>
+									<div class="form-group"><label class="col-sm-2 control-label">Class Name<span style="color:red">*</span></label>
 										<div class="col-sm-4">
 										<?php
-											$sqlLT = "SELECT * from SchoolYear where Status = 1";
+											$sqlLT = "SELECT * from Class where Status = 1 ";
 											$queryLT = $dbh -> prepare($sqlLT);
 											$queryLT->execute();
 											$resultLT=$queryLT->fetchAll(PDO::FETCH_OBJ);
 											$cntLT=1;	
 										?>
-										<select name="SchoolYearID" class="form-control" required>
+										<select name="ClassID" class="form-control" required>
         								    <option value="">Select</option>
 										<?php
 											foreach($resultLT as $resLT)
 												{
-														if ($resultL->SchoolYearID == $resLT->SchoolYearID)
+														if ($resultL->ClassID == $resLT->SchoolYearID)
 														{
-															echo "<option SELECTED value=$resLT->SchoolYearID>$resLT->YearName</option>";
+															echo "<option SELECTED value=$resLT->ClassID>$resLT->ClassName</option>";
 														}
 														else
 														{
-															echo "<option  value=$resLT->SchoolYearID>$resLT->YearName</option>";
+															echo "<option  value=$resLT->ClassID>$resLT->ClassName</option>";
 														}
 												}
 										?>
  										</select>
 										</div>
-										<label class="col-sm-2 control-label">Class Name<span style="color:red">*</span></label>
+										<label class="col-sm-2 control-label">Shark Name<span style="color:red">*</span></label>
 										<div class="col-sm-4">
-											<input type="text" name="ClassName" class="form-control" value='<?php echo($resultL->ClassName) ?>' required>
+											<input type="text" name="SharkName" class="form-control" value='<?php echo($resultL->SharkName) ?>' required>
 										</div>
 									</div>
 
-									<div class="form-group"><label class="col-sm-2 control-label">Room</label>
+									<div class="form-group"><label class="col-sm-2 control-label">Email</label>
 										<div class="col-sm-4">
-										<input type="text" name="Room" class="form-control" value='<?php echo($resultL->Room) ?>'>
+										<input type="text" name="email" class="form-control" value='<?php echo($resultL->email) ?>'>
 										</div>
-										<label class="col-sm-2 control-label">Current Class</label>
+										<label class="col-sm-2 control-label"> </label>
 										<div class="col-sm-4">
-											<?php
-											if ($ClassIDGlobal == $resultL->ClassID)
-											{
-												?>
-												<input type="checkbox" id="CurrentClass" name="CurrentClass" class="form-control" value='TRUE'  CHECKED>
-											<?php
-											}
-											else
-											{
-											?>
-												<input type="checkbox" id="CurrentClass" name="CurrentClass" class="form-control" value='TRUE' >
-												<?php
-											}
-											?>
+											
+											
 										</div>
 									</div>
 

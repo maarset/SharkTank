@@ -7,8 +7,11 @@ if(isset($_POST['login']))
 $status='1';
 $email=$_POST['username'];
 $password=md5($_POST['password']);
-$sql ="SELECT u.email,u.password,t.TeamID,t.ClassID,t.SchoolYearID FROM users as u,Team as t ";
-$sql .="WHERE u.TeamID = t.TeamID AND u.email=:email and u.password=:password and u.status=(:status) AND t.ClassID = (:classid)";
+//$sql ="SELECT u.email,u.password,t.TeamID,t.ClassID,t.SchoolYearID FROM users as u,Team as t ";
+//$sql .="WHERE u.TeamID = t.TeamID AND u.email=:email and u.password=:password and u.status=(:status) AND t.ClassID = (:classid)";
+
+$sql ="SELECT u.email,u.password,u.designation,u.ClassID FROM users as u ";
+$sql .="WHERE  u.email=:email and u.password=:password and u.status=(:status) and u.ClassID = :classid ";
 $query= $dbh -> prepare($sql);
 $query-> bindParam(':email', $email, PDO::PARAM_STR);
 $query-> bindParam(':password', $password, PDO::PARAM_STR);
