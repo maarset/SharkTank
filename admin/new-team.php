@@ -22,19 +22,19 @@ if(isset($_POST['submit']))
 	$TeamName=$_POST['TeamName'];
 	$ClassID=$_POST['ClassID'];
 	$SchoolYearID=$_POST['SchoolYearID'];
-	$SharkID=$_POST['SharkID'];
+	$IGFollowers=$_POST['IGFollowers'];
 	$credit=$_POST['credit'];
 	$debit=$_POST['debit'];
 	$balance=$_POST['balance'];
 
 
 	//$sql="UPDATE team SET TeamName=(:TeamName), ClassID=(:ClassID), SchoolYearID=(:SchoolYearID), SharkID=(:SharkID), credit=(:credit), debit=(:debit), balance=(:balance) WHERE TeamID=(:TeamID)";
-	$sql="INSERT INTO Team (TeamName,ClassID,SchoolYearID,SharkID,credit,debit,balance,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES (:TeamName,:ClassID,:SchoolYearID,:SharkID,:credit,:debit,:balance,1,'admin'	,now(3)	,'admin'	,now(3))";
+	$sql="INSERT INTO Team (TeamName,ClassID,SchoolYearID,IGFollowers,credit,debit,balance,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES (:TeamName,:ClassID,:SchoolYearID,:IGFollowers,:credit,:debit,:balance,1,'admin'	,now(3)	,'admin'	,now(3))";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':TeamName', $TeamName, PDO::PARAM_STR);
 	$query-> bindParam(':ClassID', $ClassID, PDO::PARAM_STR);
 	$query-> bindParam(':SchoolYearID', $SchoolYearID, PDO::PARAM_STR);
-	$query-> bindParam(':SharkID', $SharkID, PDO::PARAM_STR);
+	$query-> bindParam(':IGFollowers', $IGFollowers, PDO::PARAM_STR);
 	$query-> bindParam(':credit', $credit, PDO::PARAM_STR);
 	$query-> bindParam(':debit', $debit, PDO::PARAM_STR);
 	$query-> bindParam(':balance', $balance, PDO::PARAM_STR);
@@ -174,24 +174,9 @@ if(isset($_POST['submit']))
 					?>
  		</select>
 	</div>
-		<label class="col-sm-2 control-label">Shark<span style="color:red">*</span></label>
+		<label class="col-sm-2 control-label">IG Followers<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-		<?php
-				$sqlSS = "SELECT * from Shark where Status = 1";
-				$querySS = $dbh -> prepare($sqlSS);
-				$querySS->execute();
-				$resultSS=$querySS->fetchAll(PDO::FETCH_OBJ);
-				$cntSS=1;	
-		?>
-		<select name="SharkID" class="form-control" required>
-            <option value="">Select</option>
-		<?php
-			foreach($resultSS as $resSS) 
-				{
-					echo "<option  value=$resSS->SharkID>$resSS->FirstName  $resSS->LastName</option>";
-				}
-					?>
- 		</select>
+		<input type="text" name="IGFollowers" class="form-control" style="Width:200px" value="" >
 	</div>
 </div><!-- END FORM GROUP-->
 

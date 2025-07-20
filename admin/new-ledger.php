@@ -1,5 +1,5 @@
 <?php
-session_start(); 
+session_start();  
 
 ini_set('display_errors', '1');
 
@@ -14,126 +14,133 @@ else{
 if(isset($_POST['submit']))
   {
 		
-	//if(isset($_REQUEST['TeamID']))
-	//{
-	//	$TeamID = $_REQUEST['TeamID'];
-	//}
-	//else
-	//{
-	//	$ErrorFlag = TRUE;
-	//}
-	$Name=$_POST['Name'];
-	$Address=$_POST['Address'];
-	
-	
-	$sqlL = "SELECT  LedgerTypeID,Description, Debit FROM LedgerType  WHERE LedgerTypeID = (:ledgertypeid)";
-		$queryL = $dbh -> prepare($sqlL);
-		$queryL->bindParam(':ledgertypeid',$LedgerTypeID,PDO::PARAM_INT);
-		$queryL->execute();
-		$resultL=$queryL->fetch(PDO::FETCH_OBJ);
-		$cntL=1;	
-		$Debit = $resultL->Debit;
-		$Description = $resultL->Description;
-     if ($Amount > 0 && $Debit == 0)
-	 {
+	if(isset($_REQUEST['TeamID']))
+	{
+		$TeamID = $_REQUEST['TeamID'];
+	}
+	else
+	{
 		$ErrorFlag = TRUE;
-		echo "<script type='text/javascript'>alert('For ' . $Description . ' you need to input a negative number!');</script>";
-		$error = 'For ' . $Description . ' you need to input a negative number!';
-	 }
-	 else
-	 {
-		$ErrorFlag = FALSE;
-	 }
-	
-     if ($ErrorFlag == FALSE)
-	 {
-	$sql ="INSERT INTO Ledger (LedgerTypeID,TeamID,SchoolYearID, ";
-	if ($VendorID != "") { $sql .= "VendorID,"; }
-	if ($ProductID != "") { $sql .= "ProductID,"; }
-	$sql .= "Amount,Comment,DateEntered,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) ";
-	$sql .= "VALUES (:LedgerTypeID,:TeamID,:SchoolYearID, ";
-	if ($VendorID != ""){ $sql .= ":VendorID, "; }
-	if ($ProductID != "") { $sql .= ":ProductID, "; }
-	//$sql .= ":Amount,:Comment,STR_TO_DATE(':DateEntered'),1,:createdby	,now(3)	,:updatedby	,now(3))";
-	$sql .= ":Amount,:Comment,:DateEntered,1,:createdby	,now(3)	,:updatedby	,now(3))";
-	
-	$query = $dbh->prepare($sql);
-	$query-> bindParam(':LedgerTypeID', $LedgerTypeID, PDO::PARAM_STR);
-	$query-> bindParam(':TeamID', $TeamID, PDO::PARAM_STR);
-	//$query-> bindParam(':StudentID', $StudentID, PDO::PARAM_STR);
-	$query-> bindParam(':SchoolYearID', $SchoolYearIDGlobal, PDO::PARAM_STR);
-	if ($VendorID != ""){
-	$query-> bindParam(':VendorID', $VendorID, PDO::PARAM_STR);
 	}
-	if ($ProductID != ""){
-	$query-> bindParam(':ProductID', $ProductID, PDO::PARAM_STR);
-	}
-	$query-> bindParam(':Amount', $Amount, PDO::PARAM_STR);
-	$query-> bindParam(':Comment', $Comment, PDO::PARAM_STR);
-	$query-> bindParam(':DateEntered', $DateEntered, PDO::PARAM_STR);
-	$query-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
-	
-	$query-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
-	
-echo $sql;
+		$Name=$_POST['Name'];
+		$Address=$_POST['Address'];
 
-	$query->execute();
-	$lastInsertId = $dbh->lastInsertId();
-	if($lastInsertId)
-	{
-		//UPDAT TEAM BUCKETS
-		$sql1 = "SELECT SUM(Amount) AS balance FROM Ledger where Status = 1 AND TeamID = (:teamid)";
-		$sql2 = "SELECT SUM(Amount) AS debit FROM Ledger where Status = 1 and Amount < 0 AND TeamID = (:teamid)";
-		$sql3 = "SELECT SUM(Amount) AS credit FROM Ledger where Status = 1 and Amount > 0 AND TeamID = (:teamid)";
-		$query1= $dbh -> prepare($sql1);
-		$query2= $dbh -> prepare($sql2);
-		$query3= $dbh -> prepare($sql3);
-		$query1-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-		$query2-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-		$query3-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-		$query1-> execute();
-		$query2-> execute();
-		$query3-> execute();
-		$results1=$query1->fetch(PDO::FETCH_OBJ);
-		$results2=$query2->fetch(PDO::FETCH_OBJ);
-		$results3=$query3->fetch(PDO::FETCH_OBJ);
-		$Balance = $results1->balance;
-		$Debit = $results2->debit;
-		$Credit = $results3->credit;
-
-		$sqlBal = "Update Team set balance = (:balance) WHERE TeamID = (:teamid) and SchoolYearID = (:schoolyearid) ";
-		$sqlDeb = "Update Team set debit = (:debit) WHERE TeamID = (:teamid) and SchoolYearID = (:schoolyearid) ";
-		$sqlCred = "Update Team set credit = (:credit) WHERE TeamID = (:teamid) and SchoolYearID = (:schoolyearid) ";
-
-		$queryBal= $dbh -> prepare($sqlBal);
-		$queryDeb= $dbh -> prepare($sqlDeb);
-		$queryCred= $dbh -> prepare($sqlCred);
-
-		$queryBal-> bindParam(':balance', $Balance, PDO::PARAM_STR);
-		$queryDeb-> bindParam(':debit', $Debit, PDO::PARAM_STR);
-		$queryCred-> bindParam(':credit', $Credit, PDO::PARAM_STR);
-
-		$queryBal-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-		$queryDeb-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-		$queryCred-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
-
-		$queryBal-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
-		$queryDeb-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
-		$queryCred-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
 		
-		$queryBal-> execute();
-		$queryDeb-> execute();
-		$queryCred-> execute();
+	$LedgerTypeID=$_POST['LedgerTypeID'];
+	$Amount=$_POST['Amount'];
+	echo ('dateentered' . ' |' . $_POST['DateEntered'] . '|');
+	$dateQuery = date_create($_POST['DateEntered']);
+	$DateEntered= date_format($dateQuery,"Y/m/d H:i:s");
+	$VendorID = $_POST['VendorID'];
+	$Comment =  $_POST['Comment'];
 
 
-	echo "<script type='text/javascript'>alert('Ledger Added Sucessfully!');</script>";
-	echo "<script type='text/javascript'> document.location = 'ledger.php'; </script>";
-	}
-	else 
-	{
-	$error="Something went wrong. Please try again";
-	}
-}    
+		$sqlL = "SELECT  LedgerTypeID,Description, Debit FROM LedgerType  WHERE LedgerTypeID = (:ledgertypeid)";
+			$queryL = $dbh -> prepare($sqlL);
+			$queryL->bindParam(':ledgertypeid',$LedgerTypeID,PDO::PARAM_INT);
+			$queryL->execute();
+			$resultL=$queryL->fetch(PDO::FETCH_OBJ);
+			$cntL=1;	
+			$Debit = $resultL->Debit;
+			$Description = $resultL->Description;
+	     if ($Amount > 0 && $Debit == 0)
+		 {
+			$ErrorFlag = TRUE;
+			echo "<script type='text/javascript'>alert('For ' . $Description . ' you need to input a negative number!');</script>";
+			$error = 'For ' . $Description . ' you need to input a negative number!';
+		 }
+		 else
+		 {
+			$ErrorFlag = FALSE;
+		 }
+	 
+	     if ($ErrorFlag == FALSE)
+		 {
+		$sql ="INSERT INTO Ledger (LedgerTypeID,TeamID,SchoolYearID, ";
+		if ($VendorID != "") { $sql .= "VendorID,"; }
+		
+		$sql .= "Amount,Comment,DateEntered,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) ";
+		$sql .= "VALUES (:LedgerTypeID,:TeamID,:SchoolYearID, ";
+		if ($VendorID != ""){ $sql .= ":VendorID, "; }
+		if ($ProductID != "") { $sql .= ":ProductID, "; }
+		//$sql .= ":Amount,:Comment,STR_TO_DATE(':DateEntered'),1,:createdby	,now(3)	,:updatedby	,now(3))";
+		$sql .= ":Amount,:Comment,:DateEntered,1,:createdby	,now(3)	,:updatedby	,now(3))";
+		
+		$query = $dbh->prepare($sql);
+		$query-> bindParam(':LedgerTypeID', $LedgerTypeID, PDO::PARAM_STR);
+		$query-> bindParam(':TeamID', $TeamID, PDO::PARAM_STR);
+		//$query-> bindParam(':StudentID', $StudentID, PDO::PARAM_STR);
+		$query-> bindParam(':SchoolYearID', $SchoolYearIDGlobal, PDO::PARAM_STR);
+		if ($VendorID != ""){
+		$query-> bindParam(':VendorID', $VendorID, PDO::PARAM_STR);
+		}
+		
+		$query-> bindParam(':Amount', $Amount, PDO::PARAM_STR);
+		$query-> bindParam(':Comment', $Comment, PDO::PARAM_STR);
+		$query-> bindParam(':DateEntered', $DateEntered, PDO::PARAM_STR);
+		$query-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
+
+		$query-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
+
+	echo $sql;
+
+		$query->execute();
+		$lastInsertId = $dbh->lastInsertId();
+		if($lastInsertId)
+		{
+			//UPDAT TEAM BUCKETS
+			$sql1 = "SELECT SUM(Amount) AS balance FROM Ledger where Status = 1 AND TeamID = (:teamid)";
+			$sql2 = "SELECT SUM(Amount) AS debit FROM Ledger where Status = 1 and Amount < 0 AND TeamID = (:teamid)";
+			$sql3 = "SELECT SUM(Amount) AS credit FROM Ledger where Status = 1 and Amount > 0 AND TeamID = (:teamid)";
+			$query1= $dbh -> prepare($sql1);
+			$query2= $dbh -> prepare($sql2);
+			$query3= $dbh -> prepare($sql3);
+			$query1-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+			$query2-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+			$query3-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+			$query1-> execute();
+			$query2-> execute();
+			$query3-> execute();
+			$results1=$query1->fetch(PDO::FETCH_OBJ);
+			$results2=$query2->fetch(PDO::FETCH_OBJ);
+			$results3=$query3->fetch(PDO::FETCH_OBJ);
+			$Balance = $results1->balance;
+			$Debit = $results2->debit;
+			$Credit = $results3->credit;
+
+			$sqlBal = "Update Team set balance = (:balance) WHERE TeamID = (:teamid) and SchoolYearID = (:schoolyearid) ";
+			$sqlDeb = "Update Team set debit = (:debit) WHERE TeamID = (:teamid) and SchoolYearID = (:schoolyearid) ";
+			$sqlCred = "Update Team set credit = (:credit) WHERE TeamID = (:teamid) and SchoolYearID = (:schoolyearid) ";
+
+			$queryBal= $dbh -> prepare($sqlBal);
+			$queryDeb= $dbh -> prepare($sqlDeb);
+			$queryCred= $dbh -> prepare($sqlCred);
+
+			$queryBal-> bindParam(':balance', $Balance, PDO::PARAM_STR);
+			$queryDeb-> bindParam(':debit', $Debit, PDO::PARAM_STR);
+			$queryCred-> bindParam(':credit', $Credit, PDO::PARAM_STR);
+
+			$queryBal-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+			$queryDeb-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+			$queryCred-> bindParam(':teamid', $TeamID, PDO::PARAM_STR);
+
+			$queryBal-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
+			$queryDeb-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
+			$queryCred-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
+
+			$queryBal-> execute();
+			$queryDeb-> execute();
+			$queryCred-> execute();
+
+
+		echo "<script type='text/javascript'>alert('Ledger Added Sucessfully!');</script>";
+		echo "<script type='text/javascript'> document.location = 'ledger.php'; </script>";
+		}
+		else 
+		{
+		$error="Something went wrong. Please try again";
+		}
+	}    
 }
 ?>
 

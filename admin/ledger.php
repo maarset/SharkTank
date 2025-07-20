@@ -173,7 +173,7 @@ th
 
 
 <body>
-	<?php include('includes/header.php');?>
+	<?php include('includes/header.php');?> 
 
 	<div class="ts-main-content" >
 		<?php include('includes/leftbar.php');?>
@@ -212,7 +212,16 @@ th
 
 				<div class="row">
 					<div class="col-md-12">
-						<div class="panel panel-default"><div class="panel-heading">List Transactions <a href="new-ledger.php?TeamID=<?php echo($teamid) ?>">New</a></div>
+						<div class="panel panel-default">
+									<div  class="panel-heading">
+										List Transactions 
+										<?php
+										if (isset($_REQUEST["TeamID"]))
+										{ ?>
+										<a href="new-ledger.php?TeamID=<?php echo($teamid) ?>">New</a></div>
+										<?php
+										}
+										?>
 								<div class="panel-body">
 								<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 								else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>

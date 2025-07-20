@@ -3,16 +3,14 @@
 		 $("#TeamIDselect").change(function () {
 
     var teamid = $("#TeamIDselect").val();
-    //alert("http://localhost:8080/dashboard/PDOWork.php?TeamID="+ teamid);
-    //window.open("http://localhost:8080/dashboard/PDOWork.php?TeamID=" + teamid);
+   
     location.href = "ledger.php?TeamID=" + teamid;
 });
 
 $("#TeamIDselectProduct").change(function () {
 
     var teamid = $("#TeamIDselectProduct").val();
-    //alert("http://localhost:8080/dashboard/PDOWork.php?TeamID="+ teamid);
-    //window.open("http://localhost:8080/dashboard/PDOWork.php?TeamID=" + teamid);
+    
     location.href = "product.php?TeamID=" + teamid;
 });
 	 

@@ -93,7 +93,7 @@ th { white-space: nowrap; }
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading">List Transactions <?php if ($Designation == "Student") { ?><a href="new-ledger.php">New</a><?php } ?></div>
+							<div class="panel-heading">List Transactions <?php if ($Designation == "Student") { ?><a href="new-ledger.php?TeamID=<?php echo($TeamID)?>">New</a><?php } ?></div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>

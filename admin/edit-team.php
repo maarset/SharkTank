@@ -25,19 +25,19 @@ if(isset($_POST['submit']))
 	$TeamName=$_POST['TeamName'];
 	$ClassID=$_POST['ClassID'];
 	$SchoolYearID=$_POST['SchoolYearID'];
-	$SharkID=$_POST['SharkID'];
+	
 	$IGFollowers=$_POST['IGFollowers'];
 	$credit=$_POST['credit'];
 	$debit=$_POST['debit'];
 	$balance=$_POST['balance'];
 
 
-	$sql="UPDATE Team SET TeamName=(:TeamName), ClassID=(:ClassID), SchoolYearID=(:SchoolYearID), SharkID=(:SharkID),IGFollowers = (:igfollowers), credit=(:credit), debit=(:debit), balance=(:balance) WHERE TeamID=(:TeamID)";
+	$sql="UPDATE Team SET TeamName=(:TeamName), ClassID=(:ClassID), SchoolYearID=(:SchoolYearID), IGFollowers = (:igfollowers), credit=(:credit), debit=(:debit), balance=(:balance) WHERE TeamID=(:TeamID)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':TeamName', $TeamName, PDO::PARAM_STR);
 	$query-> bindParam(':ClassID', $ClassID, PDO::PARAM_STR);
 	$query-> bindParam(':SchoolYearID', $SchoolYearID, PDO::PARAM_STR);
-	$query-> bindParam(':SharkID', $SharkID, PDO::PARAM_STR);
+	
 	$query-> bindParam(':igfollowers', $IGFollowers, PDO::PARAM_STR);
 	$query-> bindParam(':credit', $credit, PDO::PARAM_STR);
 	$query-> bindParam(':debit', $debit, PDO::PARAM_STR);
@@ -190,59 +190,27 @@ if(isset($_POST['submit']))
 					?>
  		</select>
 	</div>
-		<label class="col-sm-2 control-label">Shark<span style="color:red">*</span></label>
+		<label class="col-sm-2 control-label">IG Followers</label>
 	<div class="col-sm-4">
-		<?php
-				$sqlSS = "SELECT * from Shark where Status = 1";
-				$querySS = $dbh -> prepare($sqlSS);
-				$querySS->execute();
-				$resultSS=$querySS->fetchAll(PDO::FETCH_OBJ);
-				$cntSS=1;	
-		?>
-		<select name="SharkID"  style="Width:300px" class="form-control" required>
-            <option value="">Select</option>
-		<?php
-			foreach($resultSS as $resSS)
-				{
-					if ($result->SharkID == $resSS->SharkID)
-					{
-						echo "<option SELECTED  value=$resSS->SharkID>$resSS->FirstName $resSS->LastName</option>";
-					}
-					else
-					{
-						echo "<option  value=$resSS->SharkID>$resSS->FirstName  $resSS->LastName</option>";
-					}
-				}
-					?>
- 		</select>
+		<input type="text" name="IGFollowers" class="form-control" style="Width:200px" value="<?php echo htmlentities($result->IGFollowers);?>" >
 	</div>
 </div><!-- END FORM GROUP-->
 
 
 <div class="form-group">
-	<label class="col-sm-2 control-label">IG Followers</label>
-		<div class="col-sm-4">
-    		<input type="text" name="IGFollowers" class="form-control" style="Width:200px" value="<?php echo htmlentities($result->IGFollowers);?>" >
+		<label class="col-sm-1 control-label">credit<span style="color:red">*</span></label>
+		<div class="col-sm-3">
+    	<input type="text" name="credit" class="form-control"  style="Width:200px"value="<?php echo htmlentities($result->credit);?>">
     	</div>
-	<label class="col-sm-2 control-label">credit<span style="color:red">*</span></label>
-		<div class="col-sm-4">
-			<input type="text" name="credit" class="form-control"  style="Width:200px"value="<?php echo htmlentities($result->credit);?>">
+		<label class="col-sm-1 control-label">debit<span style="color:red">*</span></label>
+		<div class="col-sm-3">
+		<input type="text" name="debit" class="form-control" style="Width:200px" required value="<?php echo htmlentities($result->debit);?>">
 		</div>
-
-	
-</div>
-
-<div class="form-group">
-
-<label class="col-sm-2 control-label">debit<span style="color:red">*</span></label>
-		<div class="col-sm-4">
-			<input type="text" name="debit" class="form-control" style="Width:200px" required value="<?php echo htmlentities($result->debit);?>">
-		</div>
-	<label class="col-sm-2 control-label">balance<span style="color:red">*</span></label>
-		<div class="col-sm-4">
+		<label class="col-sm-1 control-label">balance<span style="color:red">*</span></label>
+		<div class="col-sm-3">
 			<input type="text" name="balance" class="form-control" style="Width:200px" required value="<?php echo htmlentities($result->balance);?>">
 		</div>
-
+	
 </div>
 
 

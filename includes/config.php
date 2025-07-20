@@ -2,8 +2,8 @@
 // DB credentials.
 define('DB_HOST','localhost');
 define('DB_USER','web');
-//define('DB_PASS','2007Me@thead');
-define('DB_PASS','password');
+define('DB_PASS','2007Me@thead');
+//define('DB_PASS','password');
 define('DB_NAME','test');
 // Establish database connection.
 try
@@ -20,7 +20,7 @@ global $ClassIDGlobal;
 global $CurrentClassGlobal;
 global $SchoolYearIDGlobal;
 global $CurrentSchoolyearGlobal;
-$sql = "SELECT SettingID,Value,Name from Setting ";
+$sql = "SELECT SettingID,Value,Name from setting ";
 $query = $dbh -> prepare($sql);
 $query->execute();
 $results=$query->fetchAll(PDO::FETCH_OBJ);

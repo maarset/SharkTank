@@ -28,6 +28,8 @@ UpdatedDate DateTime,
 PRIMARY KEY (SettingID)
 );
 
+select * from setting
+
 CREATE TABLE SchoolYear (
 SchoolYearID int(16) auto_increment,
 YearName varchar(255),
@@ -56,15 +58,19 @@ FOREIGN KEY (SchoolYearID) REFERENCES SchoolYear(SchoolYearID),
 PRIMARY KEY (ClassID)
 );
 
+SELECT * FROM Class
+
 CREATE TABLE Shark (
     SharkID INT(16) AUTO_INCREMENT,
     SharkName VARCHAR(255),
     email varchar(255),
+    ClassID int,
     Status INT,
     CreatedBy VARCHAR(255),
     CreatedDate DATETIME,
     UpdatedBy VARCHAR(255),
     UpdatedDate DATETIME,
+    FOREIGN KEY (ClassID) REFERENCES Class(ClassID),
     PRIMARY KEY (SharkID)
 );
 /* NOT DONE IN PROD YET
@@ -73,6 +79,12 @@ ALTER TABLE Shark DROP COLUMN LastName;
 ALTER TABLE Shark ADD SharkName   varchar(255);
 
 ALTER TABLE Shark ADD email varchar(255);
+ALTER TABLE Shark ADD ClassID int;
+
+ ALTER TABLE Shark ADD FOREIGN KEY (ClassID) references Class(ClassID)
+
+SELECT * FROM Shark
+UPDATE Shark Set ClassID = 1
 */
 
 
@@ -81,7 +93,7 @@ TeamID int(16) auto_increment,
 TeamName varchar(255),
 ClassID int,
 SchoolYearID int,
-SharkID int,
+SharkID int,   /* Going away */
 IGFollowers int,
 Status int,
 credit decimal(15,2),
@@ -144,13 +156,15 @@ FOREIGN KEY (TeamID) REFERENCES Team(TeamID),
 FOREIGN KEY (ClassID) REFERENCES Class(ClassID),
 PRIMARY KEY (DealHistoryID)
 );
-
+/*
 IGFollowers int
 ALTER TABLE Team ADD IGFollowers int;
-
+*/
+DROP TABLE users
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
   `TeamID` int ,
+  `ClassID` int ,
   `name` varchar(50) NOT NULL,
   `email` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
@@ -217,7 +231,7 @@ CREATE TABLE `notification` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ALTER TABLE `notification`  ADD PRIMARY KEY (`id`);
 ALTER TABLE `notification`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
-
+ALTER TABLE `notification` ADD FOREIGN KEY (classid) references Class(ClassID);
 /*
 ALTER TABLE notification ADD classid int;
 ALTER TABLE notification DROP COLUMN teamid;
@@ -325,7 +339,7 @@ CREATE TABLE Ledger (
     PRIMARY KEY (LedgerID)
 );
 
-CREATE USER 'web'@'localhost' IDENTIFIED BY 'password';  /*THIS CAN't be done in phpMyAdmin*/
+CREATE USER 'web'@'localhost' IDENTIFIED BY '2007Me@thead';  /*THIS CAN't be done in phpMyAdmin*/
 
 -- Grant privileges to the new user
 GRANT ALL PRIVILEGES ON *.* TO 'web'@'localhost';
@@ -357,32 +371,33 @@ INSERT INTO Class (SchoolYearID,ClassName,Room,Status,CreatedBy,CreatedDate, Upd
 INSERT INTO Class (SchoolYearID,ClassName,Room,Status,CreatedBy,CreatedDate, UpdatedBy,UpdatedDate) VALUES (2,'Engineering Class 2025-2026','P203',1 ,'Admin',now(3),'Admin',now(3));
  SELECT * FROM Class
 
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Mark', 'Cuban',1,'Admin',now(3),'Admin',now(3));
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Barbara', 'Corcoran',1,'Admin',now(3),'Admin',now(3));
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Lori', 'Greiner',1,'Admin',now(3),'Admin',now(3));
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Robert', 'Herjavec',1,'Admin',now(3),'Admin',now(3));
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Kevin', 'OLeary',1,'Admin',now(3),'Admin',now(3));
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Daymond', 'John',1,'Admin',now(3),'Admin',now(3));
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Daniel', 'Lubetzky',1,'Admin',now(3),'Admin',now(3)); 
-INSERT INTO Shark (FirstName, LastName,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Kevin', 'Harrington',1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Mark Cuban','mark.cuban@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Barbara Corcoran','barb.corcoran@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Lori Greiner','lori.greiner@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Robert Herjavec','robert.herjavec@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Kevin OLeary','kevin.oleary@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Daymond John','daymond.john@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Daniel Lubetzky','daniel.lubertzky@gmail.com',1,1,'Admin',now(3),'Admin',now(3)); 
+INSERT INTO Shark (SharkName,email,ClassID,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Kevin Harrington','kevin.harrington@gmail.com',1,1,'Admin',now(3),'Admin',now(3));
 
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Lincoln Best',           1,1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Herecles Design',        1,1,2,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Prestiques Design',      1,1,3,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Timeless Honors',        1,1,4,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Western Rodeo Enterpise',1,1,5,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('FS&F',                   1,1,6,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
-INSERT INTO Team (TeamName,ClassID,schoolyearID,SharkID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('ORB Enterprise',         1,1,7,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Lincoln Best',           1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Herecles Design',        1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Prestiques Design',      1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Timeless Honors',        1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Western Rodeo Enterpise',1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('FS&F',                   1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
+INSERT INTO Team (TeamName,ClassID,schoolyearID,IGFollowers,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('ORB Enterprise',         1,1,0,1,0.00,0.00,0.00,'Admin',now(3),'Admin',now(3));
 
 
 
 SELECT * FROM Product
 
 
-
+/*
 SHOW TABLE STATUS LIKE 'Team';
 ALTER TABLE team AUTO_INCREMENT = 7
 SELECT * FROM Team
+*/
 
 /*INSERT INTO Student (StudentID,TeamID,Grade,ClassID,LastName,FirstName,SchoolYearID,Email,Address, City,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES (4234,1,12,1,'Morrisey','Bill',2,'bill.morrisey@gmail.com','4394 Billings Dr','Lincoln',1,0,0,0,'Admin',now(3),'Admin',now(3));*/
 /*INSERT INTO Student (StudentID,TeamID,Grade,ClassID,LastName,FirstName,SchoolYearID,Email,Address, City,Status,credit,debit,balance,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES (4233,1,12,1,'Boris','Veliskoph',2,'Boris.Veliskoph@gmail.com','495 rainbow st','Lincoln',1,0,0,0,'Admin',now(3),'Admin',now(3));*/
@@ -440,9 +455,10 @@ INSERT INTO LedgerType (Description,AmountDefault,Debit,Note,AdminOnly,Status,Cr
 INSERT INTO LedgerType (Description,AmountDefault,Debit,Note,AdminOnly,Status,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES ('Investment Wire',25.00,1,'',1,1,'Admin',now(3),'Admin',now(3));
 SELECT * FROM LedgerType WHERE Status = 1
 
-
+/*
 UPDATE LedgerType set AdminOnly = 1 where Description = 'Investment Wire'
 UPDATE LedgerType set AdminOnly = 0 WHERE LedgerTypeID != 13
+*/
 
 SELECT * FROM ledgertype
 SELECT * FROM Ledger

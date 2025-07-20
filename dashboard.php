@@ -15,24 +15,14 @@ $resultsU=$queryU->fetch(PDO::FETCH_OBJ);
 
 $teamid = $resultsU->TeamID;
 
-if ($teamid == null)
-{
-	echo("NO TEAM");
-}
-else
-{
-	echo("Team Exists");
-}
 
-echo('|' . $teamid .'|');
-echo('|' . $_SESSION['alogin'] .'|');
 $sqlT ="SELECT TeamID,name,email,gender,mobile,designation,image from users where teamid = (:teamid) and status = 1";
 $queryUT = $dbh -> prepare($sqlT);;
 $queryUT-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
 $queryUT->execute();
 $resultsUT=$queryUT->fetchall(PDO::FETCH_OBJ);
 
-$sqlTeam = "SELECT TeamName FROM team WHERE TeamID = (:teamid)";
+$sqlTeam = "SELECT TeamName FROM Team WHERE TeamID = (:teamid)";
 $queryTT = $dbh -> prepare($sqlTeam);;
 $queryTT-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
 $queryTT->execute();

@@ -18,6 +18,9 @@ $sql = "delete from Team WHERE TeamID=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
+$msg="Information Updated Successfully";
+echo "<script type='text/javascript'>alert('Team Deleted Sucessfully!');</script>";
+	echo "<script type='text/javascript'> document.location = 'teamlist.php'; </script>";
 
 }
 
@@ -105,7 +108,7 @@ $query -> execute();
 												<th>Team Name</th>
                                                 <th>Class Name</th>
 												<th>School Year</th>
-                                                <th>Shark</th>
+                                               
 												<th>IG Followers</TH>
                                                 <th>Credit</th>
                                                 <th>Debit</th>
@@ -118,9 +121,9 @@ $query -> execute();
 									<tbody>
 
 <?php 
-$sql = "SELECT T.TeamID,T.TeamName,C.ClassName,SY.YearName,S.SharkName,T.IGFollowers,T.credit,T.debit,T.balance ";
-$sql .= "from  Team AS T,Class AS C,SchoolYear AS SY, Shark AS S WHERE T.ClassID = C.ClassID AND T.SchoolYearID = SY.SchoolYearID ";
-$sql .= "AND T.SharkID = S.SharkID AND T.SchoolyearID = (:schoolyearid) ";
+$sql = "SELECT T.TeamID,T.TeamName,C.ClassName,SY.YearName,T.IGFollowers,T.credit,T.debit,T.balance ";
+$sql .= "from  Team AS T,Class AS C,SchoolYear AS SY WHERE T.ClassID = C.ClassID AND T.SchoolYearID = SY.SchoolYearID ";
+$sql .= "AND  T.SchoolyearID = (:schoolyearid) ";
 $query = $dbh -> prepare($sql);
 //$query-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);
 $query-> bindParam(':schoolyearid', $SchoolYearIDGlobal, PDO::PARAM_STR);
@@ -136,7 +139,7 @@ foreach($results as $result)
 											<td><?php echo htmlentities($result->TeamName);?></td>
                                             <td><?php echo htmlentities($result->ClassName);?></td>
 											<td><?php echo htmlentities($result->YearName);?></td>
-                                            <td><?php echo htmlentities($result->SharkName) ;?></td>
+                                            
 											<td><?php echo htmlentities($result->IGFollowers);?></td>
                                             <td><?php echo htmlentities($result->credit);?></td>
                                             <td><?php echo htmlentities($result->debit);?></td>

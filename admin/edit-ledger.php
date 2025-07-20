@@ -6,7 +6,7 @@ include('includes/config.php');
 //if(strlen($_SESSION['alogin'])==0)
 if(strlen($_SESSION['alogin'])==0 || $_SESSION['alogin'] != 'admin')
 	{	
-header('location:index.php');
+header('location:index.php'); 
 }
 else {
 

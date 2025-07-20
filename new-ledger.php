@@ -12,26 +12,33 @@ else{
 	
 if(isset($_POST['submit']))
   {
-		$email = $_SESSION['alogin'];
-		$sqlU = "SELECT  U.TeamID,T.TeamName FROM users AS U, Team AS T WHERE U.TeamID = T.TeamID AND U.email = (:email)";
-		$queryU = $dbh -> prepare($sqlU);
-		$queryU->bindParam(':email',$_SESSION['alogin'],PDO::PARAM_INT);
-		$queryU->execute();
-		$resultU=$queryU->fetch(PDO::FETCH_OBJ);
-		$cntU=1;	
-		$TeamID = $resultU->TeamID;
-		$TeamName = $resultU->TeamName;
-		$queryU = null;
+	echo ("EMAIL = " . $_SESSION['alogin'] . "<BR>");
+
+	//	$email = $_SESSION['alogin'];
+	//	//$sqlU = "SELECT  U.TeamID,T.TeamName FROM users AS U, Team AS T WHERE U.TeamID = T.TeamID AND U.email = (:email)";
+	//	$sqlU = "SELECT  TeamID FROM users  WHERE email = (:email)";
+	//	$queryU = $dbh -> prepare($sqlU);
+	//	$queryU->bindParam(':email',$email,PDO::PARAM_INT);
+	//	$queryU->execute();
+	//	$resultU=$queryU->fetch(PDO::FETCH_OBJ);
+	//	echo "<script type='text/javascript'>alert('$queryU->rowCount()');</script>";
+	//	//$TeamID = $resultU->TeamID;
+	//	//$TeamName = $resultU->TeamName;
+		
+		
+		
+		
+		//echo ("TeamName = " . $TeamName . "<BR>");
+	//	echo ("sqlU = " . $sqlU . "<BR>");
 	
+	$TeamID = $_GET['TeamID'];
 	$LedgerTypeID=$_POST['LedgerTypeID'];
 	//$StudentID=$_POST['StudentID'];
 	$VendorID=$_POST['VendorID'];
 	$ProductID=$_POST['ProductID'];
 	$Amount=$_POST['Amount'];
 	$Comment=$_POST['Comment'];
-
-	echo('|' . $_POST['Comment'] . '|');
-
+	//echo "<script type='text/javascript'>alert('TEAMID = $TeamID');</script>";
 	$sqlL = "SELECT LedgerTypeID,Description, Debit FROM LedgerType  WHERE LedgerTypeID = (:ledgertypeid)";
 		$queryL = $dbh -> prepare($sqlL);
 		$queryL->bindParam(':ledgertypeid',$LedgerTypeID,PDO::PARAM_INT);
@@ -41,6 +48,7 @@ if(isset($_POST['submit']))
 		$Debit = $resultL->Debit;
 		$Description = $resultL->Description;
 		$queryL = null;
+		
      if ($Amount > 0 && $Debit == 0)
 	 {
 		$ErrorFlag = TRUE;

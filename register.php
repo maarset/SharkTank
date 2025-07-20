@@ -43,74 +43,71 @@ if(isset($_POST['submit']))
             $ExistingUser = false;
         }
 
-    if ($ExistingUser == false)
-    {
-    $sqlnoti="insert into notification (notiuser,notireciver,notitype) values (:notiuser,:notireciver,:notitype)";
-    $querynoti = $dbh->prepare($sqlnoti);
-    $querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
-    $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
-    $querynoti->execute();    
+        if ($ExistingUser == false)
+        {
+            $sqlnoti="insert into notification (notiuser,notireciver,notitype,classid) values (:notiuser,:notireciver,:notitype,:classid)";
+            $querynoti = $dbh->prepare($sqlnoti);
+            $querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
+            $querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
+            $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+            $querynoti-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+            $querynoti->execute();    
 
-    $sql ="INSERT INTO users(name,email, password, gender, mobile, designation,";
-        if ($designation == "Student")
-        {
-            $sql .="TeamID,"; 
-        }
-    $sql .="image,ClassID, status)"; 
+                $sql ="INSERT INTO users(name,email, password, gender, mobile, designation,";
+                    if ($designation == "Student")
+                    {
+                        $sql .="TeamID,"; 
+                    }
+                $sql .="image,ClassID, status)"; 
 
-    $sql .="VALUES(:name, :email, :password, :gender, :mobileno, :designation,";
-        if ($designation == "Student")
-        {
-        $sql .=":team,"; 
-        }
-    $sql .=":image,:classid, 1)";
+                $sql .="VALUES(:name, :email, :password, :gender, :mobileno, :designation,";
+                    if ($designation == "Student")
+                    {
+                    $sql .=":team,"; 
+                    }
+                $sql .=":image,:classid, 1)";
 
-    $query= $dbh -> prepare($sql);
-    $query-> bindParam(':name', $name, PDO::PARAM_STR);
-    $query-> bindParam(':email', $email, PDO::PARAM_STR);
-    $query-> bindParam(':password', $password, PDO::PARAM_STR);
-    $query-> bindParam(':gender', $gender, PDO::PARAM_STR);
-    $query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
-    $query-> bindParam(':designation', $designation, PDO::PARAM_STR); 
-        if ($designation == "Student")
-        {
-        $query-> bindParam(':team', $team, PDO::PARAM_STR);
-        }
-    $query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-    $query-> bindParam(':image', $image, PDO::PARAM_STR);
-    $query->execute();
-    $lastInsertId = $dbh->lastInsertId();
-        if($lastInsertId)
-        {
-            	//mail.goatcrist.us
-        $to = $email;
-        $subject = "You have a message from Shark Tank";
-        $txt = "Congratulation you have registered with Lincoln Zebra Shark Tank http://goatcrist.us";
-        $headers = "From: " . $AdminEmail . " \r\n" . "CC: ". $AdminCC . " \r\n" . "BCC: ". $AdminBCC ;
-        mail($to,$subject,$txt,$headers);
+                $query= $dbh -> prepare($sql);
+                $query-> bindParam(':name', $name, PDO::PARAM_STR);
+                $query-> bindParam(':email', $email, PDO::PARAM_STR);
+                $query-> bindParam(':password', $password, PDO::PARAM_STR);
+                $query-> bindParam(':gender', $gender, PDO::PARAM_STR);
+                $query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
+                $query-> bindParam(':designation', $designation, PDO::PARAM_STR); 
+                if ($designation == "Student")
+                {
+                $query-> bindParam(':team', $team, PDO::PARAM_STR);
+                }
+                $query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+                $query-> bindParam(':image', $image, PDO::PARAM_STR);
+                $query->execute();
+                $lastInsertId = $dbh->lastInsertId();
+                if($lastInsertId)
+                {
+                    	//mail.goatcrist.us
+                $to = $email;
+                $subject = "You have a message from Shark Tank";
+                $txt = "Congratulation you have registered with Lincoln Zebra Shark Tank http://goatcrist.us";
+                $headers = "From: " . $AdminEmail . " \r\n" . "CC: ". $AdminCC . " \r\n" . "BCC: ". $AdminBCC ;
+                mail($to,$subject,$txt,$headers);
 
-        echo "<script type='text/javascript'>alert('Registration Sucessfull!');</script>";
-       // echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
+                echo "<script type='text/javascript'>alert('Registration Sucessfull!');</script>";
+                echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
+                }
+                else 
+                {
+                $error="Something went wrong. Please try again";
+                }
         }
-        else 
+        else
         {
-        $error="Something went wrong. Please try again";
+            echo "<script type='text/javascript'>alert('There is already a user with that email!');</script>";
+            //  echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
         }
-    }
-    else
-    {
-        echo "<script type='text/javascript'>alert('There is already a user with that email!');</script>";
-      //  echo "<script type='text/javascript'> document.location = 'index.php'; </script>";
-    }
 
 }
 
-$sqlTeam = "SELECT TeamID,TeamName FROM Team where Status = 1 AND ClassID = (:classidglobal)";
-$queryTeam= $dbh -> prepare($sqlTeam);
-$queryTeam-> bindParam(':classidglobal', $ClassIDGlobal, PDO::PARAM_STR);
-$queryTeam->execute();
-$results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
+
 
 ?>
 
@@ -190,7 +187,7 @@ $results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
                             <select name="designation" id="designation" class="form-control" required>
                             <option value="">Select</option>
                             <option value="Student">Student</option>
-                            <option value="Shark">Shark</option>
+                            <option value="Shark">Sharp (under construction)</option>
                             </select>
                             </div>
                             </div>
@@ -223,6 +220,11 @@ $results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
                                 <select name="team" id="team" class="form-control" required>
                                 <option value=''>SELECT</option>
                             <?php
+                            $sqlTeam = "SELECT TeamID,TeamName FROM Team where Status = 1 AND ClassID = (:classidglobal)";
+                            $queryTeam= $dbh -> prepare($sqlTeam);
+                            $queryTeam-> bindParam(':classidglobal', $ClassIDGlobal, PDO::PARAM_STR);
+                            $queryTeam->execute();
+                            $results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
                             foreach($results as $result)    
                             {
                                 ?>
