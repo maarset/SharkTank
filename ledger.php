@@ -178,7 +178,7 @@ foreach($resultLs as $result)
 						$cntS=1;
 						?>
 						<div class="panel panel-default" >
-							<div class="panel-heading">Weekly SUM <a href="new-ledger.php">New</a></div>
+							<div class="panel-heading">Weekly SUM </div>
 							<div class="panel-body">
 						<table border="0" cellspacing="5" cellpadding="5">
 					       <tbody><tr>
