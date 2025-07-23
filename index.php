@@ -30,10 +30,29 @@ if($query->rowCount() > 0)
 		}
 		else
 		{
+			$notitype='Wrong Class';
+    		$reciver='Admin';
+    		$sender=$email;
+			$sqlnotiC="insert into notification (notiuser,notireciver,notitype,classid) values (:notiuser,:notireciver,:notitype,:classid)";
+        	$querynotiC = $dbh->prepare($sqlnotiC);
+        	$querynotiC-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
+        	$querynotiC-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
+        	$querynotiC-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+        	$querynotiC-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+        	$querynotiC->execute();  
 			echo "<script>alert('You are not part of this School Year');</script>";
 		}
 	} else{
-	
+		$notitype='login error '. $_POST['password'];
+    	$reciver='Admin';
+    	$sender=$email;
+		$sqlnoti="insert into notification (notiuser,notireciver,notitype,classid) values (:notiuser,:notireciver,:notitype,:classid)";
+        $querynoti = $dbh->prepare($sqlnoti);
+        $querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
+        $querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
+        $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+        $querynoti-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+        $querynoti->execute();  
 	    echo "<script>alert('Invalid Details Or Account Not Confirmed');</script>";
 
 	}
