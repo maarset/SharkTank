@@ -178,7 +178,7 @@ $teamid =$_POST['TeamID'];
 	<input type="hidden" name="TeamID" id="TeamID" class="form-control" required value="<?php echo htmlentities($resultL->TeamID);?>">
 	<label class="col-sm-2 control-label">Amount<span style="color:red">*</span></label>
 		<div class="col-sm-4">
-		<input type="text" name="Amount" id="Amount" class="form-control" required value="<?php echo htmlentities($resultL->Amount);?>">
+		$ <input type="number" name="Amount" class="form-control: min="0.01" step="0.01" max="250000000" value='<?php echo htmlentities($resultL->Amount);?>'  required/>
 		</div>
 	<label class="col-sm-2 control-label">DateEntered <span style="color:red">*</span></label>
 		<div class="col-sm-4 input-group datepick">

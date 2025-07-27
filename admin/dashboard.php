@@ -61,8 +61,9 @@ else{
 											<div class="panel-body bk-primary text-light">
 												<div class="stat-panel text-center">
 												<?php 
-												$sql ="SELECT id from users";
+												$sql ="SELECT id from users WHERE classid = (:classid)";
 												$query = $dbh -> prepare($sql);
+												$query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 												$query->execute();
 												$results=$query->fetchAll(PDO::FETCH_OBJ);
 												$bg=$query->rowCount();
@@ -81,9 +82,10 @@ else{
 
 													<?php 
 													$reciver = 'Admin';
-													$sql1 ="SELECT id from feedback where reciver = (:reciver)";
+													$sql1 ="SELECT id from feedback where reciver = (:reciver) AND classid = (:classid)";
 													$query1 = $dbh -> prepare($sql1);;
 													$query1-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+													$query1-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 													$query1->execute();
 													$results1=$query1->fetchAll(PDO::FETCH_OBJ);
 													$regbd=$query1->rowCount();
@@ -103,9 +105,10 @@ else{
 
 													<?php 
 													$reciver = 'Admin';
-													$sql12 ="SELECT id from notification where notireciver = (:reciver)";
+													$sql12 ="SELECT id from notification where notireciver = (:reciver) AND classid = (:classid)";
 													$query12 = $dbh -> prepare($sql12);;
 													$query12-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+													$query12-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 													$query12->execute();
 													$results12=$query12->fetchAll(PDO::FETCH_OBJ);
 													$regbd2=$query12->rowCount();
@@ -201,6 +204,8 @@ else{
 													$P1Amt = $resultP1->P1;
 													$P2Amt = $resultP2->P2;
 													$P3Amt = $resultP3->P3;
+
+													$teamid = $res->TeamID;
 												?>
 													<table class=" table  " cellspacing="0" width="100%">
 													<TR><TD>Retail Margin: </TD><TD><?php echo htmlentities('$'.$resultP->RetailPrice - $resultP->InputCost );?></td></tr>
@@ -216,8 +221,132 @@ else{
 												$S32 = (28 * -1234);
 												$TotalValue = (($P1Amt * 72.5) + ($P2Amt * 55.1) + ($P3Amt * 20) + ($S28 * 80) + ($S32 * 60));
 												}
+												if ($TotalValue <> 0)
+												{
 												?>
-													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?></div>  
+													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?> 
+													
+												<?php
+												}												
+												?>
+
+													<?php
+											$sql1 = "SELECT L.LedgerID, L.LedgerTypeID,LT.Description,L.TeamID,L.SchoolYearID,L.Amount,CAST(L.dateentered AS DATE) AS DateEntered from  Ledger AS L, LedgerType AS LT where LT.LedgerTypeID = L.LedgerTypeID AND L.Status = 1 AND L.TeamID = (:TeamID) AND L.LedgerTypeID = 15";
+											$query1 = $dbh -> prepare($sql1);
+											$query1-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+											$query1->execute();
+											$result1=$query1->fetchAll(PDO::FETCH_OBJ);
+
+											//Wire Amounts
+											$sql2 = "SELECT L.LedgerID, L.LedgerTypeID,LT.Description,L.TeamID,L.SchoolYearID,L.Amount,CAST(L.dateentered AS DATE) AS DateEntered from  Ledger AS L, LedgerType AS LT where LT.LedgerTypeID = L.LedgerTypeID AND L.Status = 1 AND L.TeamID = (:TeamID) AND L.LedgerTypeID = 16";
+											$query2 = $dbh -> prepare($sql2);
+											$query2-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+											$query2->execute();
+											$result2=$query2->fetchAll(PDO::FETCH_OBJ);
+											//Get Total Wire Amounts
+											$TotalInvested = 0;
+											foreach($result2 as $res2)
+											{
+												$TotalInvested += $res2->Amount;
+											}
+
+											//AMOUNT LEFT
+											$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
+											$query3 = $dbh -> prepare($sql3);
+											$query3-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+											$query3->execute();
+											$result3=$query3->fetchAll(PDO::FETCH_OBJ);
+
+											$DealExists = false;
+											$sql4 = "SELECT D.DealID,D.DealName,D.PercentOwned,D.TotalInvested,S.SharkName ";
+											$sql4 .= "FROM Deal AS D, Shark AS S WHERE D.SharkID = S.SharkID AND D.Status = 1 AND D.TeamID = (:teamid)";
+											$query4 = $dbh -> prepare($sql4);
+											$query4-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
+											$query4->execute();
+											$result4=$query4->fetch(PDO::FETCH_OBJ);
+											if($query4->rowCount() > 0)
+												{
+													$DealExists = true;
+												}
+											?>
+											<?php
+											$teamid = null;
+											if ($DealExists == true)
+											{ ?>
+											<div class="stat-panel-number h3 text-center"> SHARK <?php echo($result4->SharkName ); ?> </div>
+											<?php
+											} ?>
+												
+											
+											<table id="Ledger1" class="display table  table-bordered " cellpadding="0" cellspacing="0" width="40%">
+											<thead>
+												<tr>
+
+													<th>Trans Type</th>
+													<th>Amount</th>
+													<th>DateEntered</th>	
+												</tr>
+											</thead>
+											<tbody>
+											<?php
+
+											foreach($result1 as $res1)
+											{
+											echo('<TR>');
+											echo( '<td>'.$res1->Description . ':</td>  <TD>$' . $res1->Amount . '</td>');
+											$d = new DateTime($res1->DateEntered);
+											echo('<TD>'. $d->format('m-d-Y') . ':</td>');
+											echo('</tr>');
+											}
+											$cnt = 1;
+
+											foreach($result2 as $res2)
+											{
+											echo('<TR>');
+											echo( '<TD>'.$res2->Description . '#'.$cnt.':</TD><TD>  $' . $res2->Amount . ' </TD>');
+											$d = new DateTime($res2->DateEntered);
+											echo('<TD>' . $d->format('m-d-Y') . '</TD>');
+											echo('</tr>');
+											$cnt++;
+											}
+											echo('</tbody><tfoot>');
+										
+											foreach($result3 as $res3)
+											{
+											echo('<TR>');
+											echo('<TH>Remaining:  </TH><TH>$' . $res3->Sum . '</TH><TH></TH>');
+											echo('</tr>');
+											}
+											?>
+											</tfoot>
+											</table>
+											<?php
+											if ($DealExists == true)
+											{ ?>
+											<table id="Ledger1" class="display table  table-bordered " cellpadding="0" cellspacing="0" width="40%">
+											<thead>
+												<thead>
+												<tr><TH></TH><TH></TH></TR>
+												</thead>
+											<tbody>
+													<td>Shark Total Invested</td>
+													<td>$<?php echo($result4->TotalInvested); ?> </td> 
+												</tr>
+												<tr>
+													<td>Shark Company Percent Owned</td>
+													<td><?php echo($result4->PercentOwned); ?>%</td> 
+												</tr>
+												<tr>
+													<td>Shark Project ROI</td>
+													<td><?php echo htmlentities('$'. number_format(abs(($TotalValue * (floatval($result4->PercentOwned) / 100.00) ) - ($result4->TotalInvested)), 2, '.', ',') );?></td> 
+												</tr>
+										</tbody>
+										</table>
+										<?php
+											}
+											?>
+
+
 												</div>
 											</div>
 											<!--<div class="stat-panel-number h3 text-center"><?php echo htmlentities($res->TeamName);?> </div>-->
@@ -225,6 +354,15 @@ else{
 									</div>
 									<?php
 									$x++;
+									$TotalValue = null;
+
+									$P1Amt = null;
+									$P2Amt = null;
+									$P3Amt = null;
+
+									$V11 = null;
+									$S28 = null;
+									$S32 = null;
 								}
 								?>
 

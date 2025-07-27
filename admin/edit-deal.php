@@ -148,7 +148,7 @@ if(isset($_POST['submit']))
 			<label class="col-sm-2 control-label">Total Invested<span style="color:red">*</span></label>
 
 		<div class="col-sm-4">
-			<input type="text" name="TotalInvested" style="Width:200px"  class="form-control" required value="<?php echo htmlentities($result->TotalInvested);?>">
+			$ <input type="number" class="form-control" style="Width:200px"  name="TotalInvested" class="form-control: min="0.01" step="0.01" max="250000000" value='<?php echo htmlentities($result->TotalInvested);?>'  required/>
 		</div>
 		<label class="col-sm-2 control-label">Percent Owned<span style="color:red">*</span></label>
 		<div class="col-sm-4">
@@ -178,7 +178,7 @@ if(isset($_POST['submit']))
 <div class="row">
 	<div class="col-md-10">
 <?php
-	$sqlH = "SELECT DealHistoryID,DealID,DealName,TotalInvested,PercentOwned,CreatedBy,CreatedDate from  DealHistory WHERE TeamID = (:dealid) ORDER BY DealHistoryID";
+	$sqlH = "SELECT DealHistoryID,DealID,DealName,TotalInvested,PercentOwned,CreatedBy,CreatedDate from  DealHistory WHERE DealID = (:dealid) ORDER BY DealHistoryID";
 	$queryH = $dbh -> prepare($sqlH);
 	$queryH-> bindParam(':dealid', $result->DealID, PDO::PARAM_STR);
 	$queryH->execute();

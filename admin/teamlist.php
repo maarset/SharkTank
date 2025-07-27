@@ -14,7 +14,8 @@ $id=$_GET['del'];
 $name=$_GET['name'];
 
 //$sql = "delete from users WHERE id=:id";
-$sql = "delete from Team WHERE TeamID=:id";
+//$sql = "delete from Team WHERE TeamID=:id";
+$sql = "update Team set status = 0 WHERE TeamID=:id";
 $query = $dbh->prepare($sql);
 $query -> bindParam(':id',$id, PDO::PARAM_STR);
 $query -> execute();
@@ -93,7 +94,7 @@ echo "<script type='text/javascript'>alert('Team Deleted Sucessfully!');</script
 				<div class="row">
 					<div class="col-md-12">
 
-						<h2 class="page-title">Manage Teams</h2>
+						<h2 class="page-title">Manage Teams - <?php echo($CurrentClassGlobal . ' - '.  $CurrentSchoolyearGlobal) ?></h2>
 						
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
@@ -122,7 +123,7 @@ echo "<script type='text/javascript'>alert('Team Deleted Sucessfully!');</script
 
 <?php 
 $sql = "SELECT T.TeamID,T.TeamName,C.ClassName,SY.YearName,T.IGFollowers,T.credit,T.debit,T.balance ";
-$sql .= "from  Team AS T,Class AS C,SchoolYear AS SY WHERE T.ClassID = C.ClassID AND T.SchoolYearID = SY.SchoolYearID ";
+$sql .= "from  Team AS T,Class AS C,SchoolYear AS SY WHERE T.ClassID = C.ClassID AND T.SchoolYearID = SY.SchoolYearID AND T.Status = 1 ";
 $sql .= "AND  T.SchoolyearID = (:schoolyearid) ";
 $query = $dbh -> prepare($sql);
 //$query-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);

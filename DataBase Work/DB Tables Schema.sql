@@ -345,7 +345,7 @@ CREATE USER 'web'@'localhost' IDENTIFIED BY '2007Me@thead';  /*THIS CAN't be don
 GRANT ALL PRIVILEGES ON *.* TO 'web'@'localhost';
 
 -- Refresh privileges
-FLUSH PRIVILEGES;
+--FLUSH PRIVILEGES;
 
 INSERT INTO Setting (Value,Name,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES (1,'CurrentClassID' ,'Admin',now(3),'Admin',now(3));
 INSERT INTO Setting (Value,Name,CreatedBy,CreatedDate,UpdatedBy,UpdatedDate) VALUES (1,'CurrentSchoolYearID' ,'Admin',now(3),'Admin',now(3));

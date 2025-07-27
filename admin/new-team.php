@@ -20,8 +20,10 @@ if(isset($_POST['submit']))
 	//$TeamID=$_POST['TeamID'];
 	//$TeamID = $editid;
 	$TeamName=$_POST['TeamName'];
-	$ClassID=$_POST['ClassID'];
-	$SchoolYearID=$_POST['SchoolYearID'];
+	//$ClassID=$_POST['ClassID'];
+	$ClassID=$ClassIDGlobal;
+	//$SchoolYearID=$_POST['SchoolYearID'];
+	$SchoolYearID=$SchoolYearIDGlobal;
 	$IGFollowers=$_POST['IGFollowers'];
 	$credit=$_POST['credit'];
 	$debit=$_POST['debit'];
@@ -113,11 +115,11 @@ if(isset($_POST['submit']))
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
-						<h3 class="page-title">New Team </h3>
+						<h3 class="page-title">New Team - <?php echo($CurrentSchoolyearGlobal) ?></h3>
 						<div class="row">
 							<div class="col-md-12">
 								<div class="panel panel-default">
-									<div class="panel-heading">New Info</div>
+									<div class="panel-heading">New Team</div>
 <?php if($error){?><div class="errorWrap"><strong>ERROR</strong>:<?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap"><strong>SUCCESS</strong>:<?php echo htmlentities($msg); ?> </div><?php }?>
 
@@ -139,12 +141,19 @@ if(isset($_POST['submit']))
 				$resultC=$queryC->fetchAll(PDO::FETCH_OBJ);
 				$cntC=1;	
 		?>
-		<select name="ClassID" class="form-control" required>
+		<select name="ClassID" class="form-control" disabled>
             <option value="">Select</option>
 		<?php
 			foreach($resultC as $resC)
 				{
+					if ($ClassIDGlobal == $resC->ClassID)
+					{
+						echo "<option  value=$resC->ClassID SELECTED>$resC->ClassName</option>";
+					}
+					else
+					{
 				echo "<option  value=$resC->ClassID>$resC->ClassName</option>";
+					}
 				}
 					?>
  		</select>
@@ -155,28 +164,14 @@ if(isset($_POST['submit']))
 </div>
 
 <div class="form-group">
-		<label class="col-sm-2 control-label">School Year<span style="color:red">*</span></label>
-	<div class="col-sm-4">
-		<?php
-				$sqlS = "SELECT * from SchoolYear where Status = 1";
-				$queryS = $dbh -> prepare($sqlS);
-				$queryS->execute();
-				$resultS=$queryS->fetchAll(PDO::FETCH_OBJ);
-				$cntS=1;	
-		?>
-		<select name="SchoolYearID" class="form-control" required>
-            <option value="">Select</option>
-		<?php
-			foreach($resultS as $resS)
-				{
-					echo "<option  value=$resS->SchoolYearID>$resS->YearName</option>";
-				}
-					?>
- 		</select>
-	</div>
 		<label class="col-sm-2 control-label">IG Followers<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-		<input type="text" name="IGFollowers" class="form-control" style="Width:200px" value="" >
+		<input type="text" name="IGFollowers" class="form-control" style="Width:200px" value="0" >
+		
+	</div>
+		<label class="col-sm-2 control-label">    </label>
+	<div class="col-sm-4">
+		
 	</div>
 </div><!-- END FORM GROUP-->
 
@@ -184,16 +179,16 @@ if(isset($_POST['submit']))
 <div class="form-group">
 		<label class="col-sm-2 control-label">credit</label>
 	<div class="col-sm-2">
-		<input type="text" name="credit" class="form-control" value="">
+		<input type="text" name="credit" class="form-control" value="0.00">
 	</div>
 
 		<label class="col-sm-2 control-label">debit</label>
 	<div class="col-sm-2">
-		<input type="text" name="debit" class="form-control"  value="">
+		<input type="text" name="debit" class="form-control"  value="0.00">
 	</div>
 	<label class="col-sm-2 control-label">balance</label>
 	<div class="col-sm-2">
-		<input type="text" name="balance" class="form-control"  value="">
+		<input type="text" name="balance" class="form-control"  value="0.00">
 	</div>
 </div>
 

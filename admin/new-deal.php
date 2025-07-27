@@ -67,7 +67,7 @@ if(isset($_POST['submit']))
 			$queryH-> bindParam(':createdby', $_SESSION['alogin'], PDO::PARAM_STR);
 			$queryH-> bindParam(':updatedby', $_SESSION['alogin'], PDO::PARAM_STR);
 			$queryH->execute();
-			echo "<script type='text/javascript'>alert('Team Added Sucessfully!');</script>";
+			echo "<script type='text/javascript'>alert('Deal Added Sucessfully!');</script>";
 			echo "<script type='text/javascript'> document.location = 'deallist.php'; </script>";
 		}
 		else 
@@ -209,8 +209,7 @@ if(isset($_POST['submit']))
 	</div>
 		<label class="col-sm-2 control-label">Total Invested<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-		<input type="text" name="TotalInvested" class="form-control"  value="">
-		
+		$ <input type="number" class="form-control" name="TotalInvested" class="form-control: min="0.01" step="0.01" max="250000000" value=''  required/>
 	</div>
 </div><!-- END FORM GROUP-->
 

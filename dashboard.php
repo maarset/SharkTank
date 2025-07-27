@@ -7,9 +7,11 @@ if(strlen($_SESSION['alogin'])==0)
 header('location:index.php');
 }
 else{
-$sqlU ="SELECT TeamID from users where email = (:email)";
+$sqlU ="SELECT TeamID from users where email = (:email) AND ClassID = (:classid)"; 
 $queryU = $dbh -> prepare($sqlU);;
 $queryU-> bindParam(':email', $_SESSION['alogin'], PDO::PARAM_STR);
+$queryU-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+
 $queryU->execute();
 $resultsU=$queryU->fetch(PDO::FETCH_OBJ);
 

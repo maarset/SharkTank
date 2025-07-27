@@ -271,11 +271,12 @@ if(isset($_POST['submit']))
 		if(isset($_POST['Amount']))
 			{ 
 				?>
-			<input type="text" name="Amount" class="form-control" value='<?php echo($_POST['Amount']) ?>' required>
+			<!--<input type="text" name="Amount" class="form-control" value='<?php echo($_POST['Amount']) ?>' required>-->
+			$ <input type="number" name="Amount" class="form-control: min="0.01" step="0.01" max="250000" value='<?php echo($_POST['Amount']) ?>'  required/>
 			<?php 
 			} else {
 				?>
-		 <input type="text" name="Amount" class="form-control" required value="">
+		 $ <input type="number" name="Amount" class="form-control: min="0.01" step="0.01" max="250000" value=''  required/>
 <?php } ?>
 
 			
