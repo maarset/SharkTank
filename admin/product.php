@@ -277,10 +277,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    <input type="text" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" value="" required >
+                                    $ <input type="number" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" min="0.01" step="0.01" max="1000" value="" required >
                                     <?php
                                 } else { ?>
-                                    <input type="text" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" value="<?php echo htmlentities($resultP->RetailPrice);?>" required >
+                                    <input type="number" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" min="0.01" step="0.01" max="1000" value="<?php echo htmlentities($resultP->RetailPrice);?>" required >
                                     <?php } ?>
                                 </div>
 
@@ -291,10 +291,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    <input type="text" name="WholeSalePrice" class="form-control" style="Width:100px" value="" required>
+                                    <input type="number" name="WholeSalePrice" class="form-control" style="Width:100px" min="0.01" step="0.01" max="1000" value="" required>
                                     <?php
                                 } else { ?>
-                                    <input type="text" name="WholeSalePrice" class="form-control" style="Width:100px" value="<?php echo htmlentities($resultP->WholeSalePrice);?>" required>
+                                    <input type="number" name="WholeSalePrice" class="form-control" style="Width:100px" min="0.01" step="0.01" max="1000" value="<?php echo htmlentities($resultP->WholeSalePrice);?>" required>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -305,10 +305,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    <input type="text" name="QtySoldRetail" class="form-control" style="Width:100px" value="" required>
+                                    <input type="number" name="QtySoldRetail" class="form-control" style="Width:100px" min="0" step="1" max="1000" value="" required>
                                     <?php
                                 } else { ?>
-                                    <input type="text" name="QtySoldRetail" class="form-control" style="Width:100px" value="<?php echo $resultP->QtySoldRetail;?>" required>
+                                    <input type="number" name="QtySoldRetail" class="form-control" style="Width:100px" min="0" step="1" max="1000" value="<?php echo $resultP->QtySoldRetail;?>" required>
                                     <?php } ?>
                                 </div>
                                 <label class="col-sm-1 control-label">Qty Sold Wholesale<span style="color:red">*</span></label>
@@ -316,10 +316,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    <input type="text" name="QtySoldWholesale" class="form-control" style="Width:100px" value="" required>
+                                    <input type="number" name="QtySoldWholesale" class="form-control" style="Width:100px" min="0" step="1" max="1000" value="" required>
                                     <?php
                                 } else { ?>
-                                    <input type="text" name="QtySoldWholesale" class="form-control" style="Width:100px" value="<?php echo $resultP->QtySoldWholesale;?>" required>
+                                    <input type="number" name="QtySoldWholesale" class="form-control" style="Width:100px" min="0" step="1" max="1000" value="<?php echo $resultP->QtySoldWholesale;?>" required>
                                     <?php } ?>
                                 </div>
 
@@ -328,10 +328,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    <input type="text" name="NumberofPotentialCustomers" class="form-control" style="Width:100px" value="" required>
+                                    <input type="number" name="NumberofPotentialCustomers" class="form-control" style="Width:100px" min="0" step="1" max="1000" value="" required>
                                     <?php
                                 } else { ?>
-                                    <input type="text" name="NumberofPotentialCustomers" class="form-control" style="Width:100px" value="<?php echo $resultP->NumberofPotentialCustomers;?>" required>
+                                    <input type="number" name="NumberofPotentialCustomers" class="form-control" style="Width:100px" min="0" step="1" max="1000" value="<?php echo $resultP->NumberofPotentialCustomers;?>" required>
                                     <?php } ?>
                                 </div>
                             </div>
@@ -342,10 +342,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    <input type="text" name="InputCost" class="form-control" style="Width:100px" value="" required>
+                                    <input type="number" name="InputCost" class="form-control" style="Width:100px" min="0.01" step="0.01" max="1000" value="" required>
                                     <?php
                                 } else { ?>
-                                    <input type="text" name="InputCost" class="form-control" style="Width:100px" value="<?php echo $resultP->InputCost;?>" required>
+                                    <input type="number" name="InputCost" class="form-control" style="Width:100px" min="0.01" step="0.01" max="1000" value="<?php echo $resultP->InputCost;?>" required>
                                     <?php } ?>
                                 </div>
                                 <?php
