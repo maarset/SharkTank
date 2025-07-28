@@ -43,7 +43,7 @@ if($query->rowCount() > 0)
 			echo "<script>alert('You are not part of this School Year');</script>";
 		}
 	} else{
-		$notitype='login error '. $_POST['password'];
+		$notitype='login error with password '. $_POST['password'];
     	$reciver='Admin';
     	$sender=$email;
 		$sqlnoti="insert into notification (notiuser,notireciver,notitype,classid) values (:notiuser,:notireciver,:notitype,:classid)";

@@ -79,7 +79,6 @@ else{
 										<div class="panel panel-default">
 											<div class="panel-body bk-success text-light">
 												<div class="stat-panel text-center">
-
 													<?php 
 													$reciver = 'Admin';
 													$sql1 ="SELECT id from feedback where reciver = (:reciver) AND classid = (:classid)";
@@ -102,7 +101,6 @@ else{
 										<div class="panel panel-default">
 											<div class="panel-body bk-danger text-light">
 												<div class="stat-panel text-center">
-
 													<?php 
 													$reciver = 'Admin';
 													$sql12 ="SELECT id from notification where notireciver = (:reciver) AND classid = (:classid)";
@@ -120,6 +118,7 @@ else{
 											<a href="notification.php" class="block-anchor panel-footer text-center">Full Detail &nbsp; <i class="fa fa-arrow-right"></i></a>
 										</div>
 									</div>
+									
 									<div class="col-md-3">
 										<div class="panel panel-default">
 											<div class="panel-body bk-info text-light">
@@ -156,17 +155,6 @@ else{
 							<div class="col-md-12">
 								<DIV class="row">
 								<?php 
-								
-								$bk[1] = 'bk-success text-dark';
-								$bk[2] = 'bk-primary text-light';
-								
-								$bk[3] = 'bk-info text-light';
-								$bk[4] = 'bk-primary text-light';
-								$bk[5] = 'bk-warning text-light';
-								$bk[6] = 'bk-danger text-light';
-								$bk[7] = 'bk-success text-dark';
-								$bk[8] = 'bk-warning text-light';
-								
 								$x = 1;
 								foreach($resultT as $res)
 								{
@@ -175,16 +163,19 @@ else{
         							$queryP-> bindParam(':TeamID', $res->TeamID, PDO::PARAM_STR);
         							$queryP->execute();
         							$resultP=$queryP->fetch(PDO::FETCH_OBJ);
-								
-								?>
+									if ($x == 5)
+									{
+									?>
+									</DIV><DIV class="row">
+									<?php 
+									} ?>
 									<div class="col-md-3">
 										<div class="panel panel-default">
-											<div class="stat-panel-number h3 text-center"><?php echo htmlentities($res->TeamName);?> </div>
-												<div class="panel-body <?php echo($bk[$x]) ?>">
-												<div class="stat-panel text-left">
-												<?php 
-												
-												if($queryP->rowCount() > 0)
+											<div class="stat-panel-number h3 text-center"><?php echo htmlentities($res->TeamName . ' ' . $res->TeamID);?> </div>
+												<div class="panel-body bk-primary text-light">
+													<div class="stat-panel text-left">
+													<?php 
+													if($queryP->rowCount() > 0)
 												{
 													$p1 = "SELECT SUM(Amount) AS P1 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (8,9,10,11,12)";
 													$p2 = "SELECT SUM(Amount) AS P2 FROM Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (1,2,3)";
@@ -275,8 +266,11 @@ else{
 											{ ?>
 											<div class="stat-panel-number h3 text-center"> SHARK <?php echo($result4->SharkName ); ?> </div>
 											<?php
-											} ?>
-												
+											} else { ?>
+											<div class="stat-panel-number h3 text-center"> NO DEAL YET </div>
+											<?php
+											}
+											?>
 											
 											<table id="Ledger1" class="display table  table-bordered " cellpadding="0" cellspacing="0" width="40%">
 											<thead>
@@ -346,28 +340,28 @@ else{
 											}
 											?>
 
-
+													</div>
 												</div>
 											</div>
-											<!--<div class="stat-panel-number h3 text-center"><?php echo htmlentities($res->TeamName);?> </div>-->
 										</div>
-									</div>
+									</DIV> <!--col-md-3-->
 									<?php
+									//if ($x == 8)
+									//{
+									//	echo ('</DIV>');
+									//}
 									$x++;
 									$TotalValue = null;
-
 									$P1Amt = null;
 									$P2Amt = null;
 									$P3Amt = null;
-
 									$V11 = null;
 									$S28 = null;
 									$S32 = null;
 								}
 								?>
-
-								</DIV>
-							</div>
+									
+								</div>
 						</DIV>
 
 					</div>

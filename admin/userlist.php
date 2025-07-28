@@ -49,7 +49,13 @@ if(isset($_REQUEST['unconfirm']))
 	$query -> execute();
 	$msg="Changes Sucessfully";
 	}
-
+    
+	if(isset($_REQUEST['login']))
+	{
+		$_SESSION['alogin'] = $_REQUEST['email'];
+		$msg="Login Successfull";
+		echo "<script type='text/javascript'> document.location = '../dashboard.php'; </script>";
+	}
 
 
 
@@ -165,13 +171,16 @@ if(isset($_REQUEST['unconfirm']))
                                             <td><?php echo htmlentities($result->mobile);?></td>
                                             <td><?php echo htmlentities($result->designation);?> 
                                             <td>
-                                            
+                                            <!--
                                             <?php if($result->status == 1)
                                                     {?>
                                                     <a href="userlist.php?confirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Un-Confirm the Account')">Confirmed <i class="fa fa-check-circle"></i></a> 
                                                     <?php } else {?>
                                                     <a href="userlist.php?unconfirm=<?php echo htmlentities($result->id);?>" onclick="return confirm('Do you really want to Confirm the Account')">Un-Confirmed <i class="fa fa-times-circle"></i></a>
                                                     <?php } ?>
+													<a href="userlist.php?login=true&email=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you really want to login as $result->email')">login <i class="fa fa-times-circle"></i></a>
+													-->
+													<a href="userlist.php?login=true&email=<?php echo htmlentities($result->email);?>" onclick="return confirm('Do you really want to login as <?php echo ($result->email) ?>'">login as  <?php echo htmlentities($result->name);?><i class="fa fa-times-circle"></i></a>
 											</td>												
 											<td>
 											<a href="edit-user.php?edit=<?php echo $result->id;?>" onclick="return confirm('Do you want to Edit');">&nbsp; <i class="fa fa-pencil"></i></a>&nbsp;&nbsp;

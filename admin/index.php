@@ -16,13 +16,21 @@ if($query->rowCount() > 0)
 $_SESSION['alogin']=$_POST['username'];
 echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
 } else{
-  
+  $notitype='login Admin error with password '. $_POST['password'];
+    	$reciver='Admin';
+    	$sender=$email;
+		$sqlnoti="insert into notification (notiuser,notireciver,notitype,classid) values (:notiuser,:notireciver,:notitype,:classid)";
+        $querynoti = $dbh->prepare($sqlnoti);
+        $querynoti-> bindParam(':notiuser', $sender, PDO::PARAM_STR);
+        $querynoti-> bindParam(':notireciver',$reciver, PDO::PARAM_STR);
+        $querynoti-> bindParam(':notitype', $notitype, PDO::PARAM_STR);
+        $querynoti-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+        $querynoti->execute();  
   echo "<script>alert('Invalid Details');</script>";
 
 }
 
 }
-
 ?>
 <!doctype html>
 <html lang="en" class="no-js">
