@@ -145,5 +145,5 @@ foreach($results as $result)
 </html>
 <?php 
 $query = null;
-$dbh = null;
+include('includes/close.php');
 } ?>

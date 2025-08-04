@@ -20,11 +20,11 @@ global $CurrentClassGlobal;
 global $SchoolYearIDGlobal;
 global $CurrentSchoolyearGlobal;
 $sql = "SELECT SettingID,Value,Name from Setting ";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
+$queryS = $dbh -> prepare($sql);
+$queryS->execute();
+$results=$queryS->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
-if($query->rowCount() > 0)
+if($queryS->rowCount() > 0)
 {
     foreach($results as $result) 
     {
@@ -39,7 +39,7 @@ if($query->rowCount() > 0)
     }
 
 }
-else
+else 
 {
     echo("CONFIG DATA NOT FOUND");
 }
@@ -74,6 +74,6 @@ $AdminCC = "slseacrist@gmail.com";
 global $AdminBCC;
 $AdminBCC = "michael.aarset@gmail.com";
 
-//error_reporting(E_ALL);
-error_reporting(0);
+error_reporting(E_ALL);
+//error_reporting(0);
 ?>

@@ -170,4 +170,7 @@ foreach($results as $result)
 		
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+include('includes/close.php');
+} ?>

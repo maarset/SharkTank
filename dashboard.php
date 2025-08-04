@@ -4,35 +4,33 @@ session_start();
 include('includes/config.php');
 if(strlen($_SESSION['alogin'])==0)
 	{	
-header('location:index.php');
-}
-else{
-$sqlU ="SELECT TeamID from users where email = (:email) AND ClassID = (:classid)"; 
-$queryU = $dbh -> prepare($sqlU);;
-$queryU-> bindParam(':email', $_SESSION['alogin'], PDO::PARAM_STR);
-$queryU-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-
-$queryU->execute();
-$resultsU=$queryU->fetch(PDO::FETCH_OBJ);
-
-$teamid = $resultsU->TeamID;
-
-
-$sqlT ="SELECT TeamID,name,email,gender,mobile,designation,image from users where teamid = (:teamid) and status = 1";
-$queryUT = $dbh -> prepare($sqlT);;
-$queryUT-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
-$queryUT->execute();
-$resultsUT=$queryUT->fetchall(PDO::FETCH_OBJ);
-
-$sqlTeam = "SELECT TeamName FROM Team WHERE TeamID = (:teamid)";
-$queryTT = $dbh -> prepare($sqlTeam);;
-$queryTT-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
-$queryTT->execute();
-$resultsTT=$queryTT->fetch(PDO::FETCH_OBJ);
-$teamname = $resultsTT->TeamName;
-
-
-}							
+	header('location:index.php');
+	}
+	else{
+	$sqlU ="SELECT TeamID from users where email = (:email) AND ClassID = (:classid)";  
+	$queryU = $dbh -> prepare($sqlU);;
+	$queryU-> bindParam(':email', $_SESSION['alogin'], PDO::PARAM_STR);
+	$queryU-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+	
+	$queryU->execute();
+	$resultsU=$queryU->fetch(PDO::FETCH_OBJ);
+	
+	$teamid = $resultsU->TeamID;
+	
+	
+	$sqlT ="SELECT TeamID,name,email,gender,mobile,designation,image from users where teamid = (:teamid) and status = 1";
+	$queryUT = $dbh -> prepare($sqlT);;
+	$queryUT-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
+	$queryUT->execute();
+	$resultsUT=$queryUT->fetchall(PDO::FETCH_OBJ);
+	
+	$sqlTeam = "SELECT TeamName FROM Team WHERE TeamID = (:teamid)";
+	$queryTT = $dbh -> prepare($sqlTeam);;
+	$queryTT-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
+	$queryTT->execute();
+	$resultsTT=$queryTT->fetch(PDO::FETCH_OBJ);
+	$teamname = $resultsTT->TeamName; 
+	}							
  ?>
 <!doctype html>
 <html lang="en" class="no-js">
@@ -93,12 +91,10 @@ $teamname = $resultsTT->TeamName;
 													<DIV><img src="../images/<?php echo($resUT->image); ?>" width="100" height="100"/></DIV>
 												</div>
 											</div>
-											<a href="userlist.php" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
+											<a href="userlist.php" style="display:none" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
 										</div>
 									</div>
 									<?php } ?>
-									
-							
 								</DIV>
 							</div>
 						</DIV>
@@ -181,6 +177,7 @@ $teamname = $resultsTT->TeamName;
 												}
 												?>
 													<div class="stat-panel-title text-uppercase"><strong>Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?></strong></div>  
+												</div>
 												</div>
 											</div>
 										</div>
@@ -337,8 +334,8 @@ $teamname = $resultsTT->TeamName;
 													<td>Shark Project ROI</td>
 													<td><?php echo htmlentities('$'. number_format(abs(($TotalValue * (floatval($result4->PercentOwned) / 100.00) ) - ($result4->TotalInvested)), 2, '.', ',') );?></td> 
 												</tr>
-										</tbody>
-										</table>
+											</tbody>
+											</table>
 											<?php
 											}
 											?>
@@ -349,7 +346,6 @@ $teamname = $resultsTT->TeamName;
 									$x++;
 								}
 								?>
-
 								</DIV>
 							</div>
 						</DIV>
@@ -375,6 +371,7 @@ $teamname = $resultsTT->TeamName;
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"   crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.html5.min.js"   crossorigin="anonymous"></script>
 <script src="https://cdn.datatables.net/buttons/3.2.3/js/buttons.print.min.js"   crossorigin="anonymous"></script>
+
 	<!-- Loading Scripts -->
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap-select.min.js"></script>
@@ -384,27 +381,45 @@ $teamname = $resultsTT->TeamName;
 	<script src="js/Chart.min.js"></script>
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
+	<script src="js/main.js"></script>
 
 	
 	<script>
 		
 	 $(document).ready(function () { 
 		
-new DataTable('#LedgerAVG', {
-    info: false,
-    ordering: true,
-    paging: true,
-	 order: [[3, 'asc']],
-	lengthMenu: [10, 25, 50, -1]
-	
-    // ,lengthMenu: [
-    //    [10, 25, 50, "All"]
-    //]
-});    
-});    
+		new DataTable('#LedgerAVG', {
+		    info: false,
+		    ordering: true,
+		    paging: true,
+			 order: [[3, 'asc']],
+			lengthMenu: [10, 25, 50, -1]
+			
+		    // ,lengthMenu: [
+		    //    [10, 25, 50, "All"]
+		    //]
+		});    
+	});    
 
 	
 	</script>
 </body>
 </html>
-<?php  ?>
+<?php  
+$queryU = null;
+$queryUT = null;
+$queryTT = null;
+$queryT = null;
+$queryP = null;
+
+$queryP1 = null;
+$queryP2 = null;
+$queryP3 = null;
+
+$query5 = null;
+$query1 = null;
+$query2 = null;
+$query3 = null;
+$query4 = null;
+include('includes/close.php');
+?>

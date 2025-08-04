@@ -197,10 +197,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
 					
 					<?php
 							$sqlT = "SELECT * from Team where ClassID = (:classid) AND Status = 1";
-							$queryT = $dbh -> prepare($sqlT);
-							$queryT-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-							$queryT->execute();
-							$resultT=$queryT->fetchAll(PDO::FETCH_OBJ);
+							$queryTT = $dbh -> prepare($sqlT);
+							$queryTT-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+							$queryTT->execute();
+							$resultT=$queryTT->fetchAll(PDO::FETCH_OBJ);
 							$cntT=1;	
 					?>
 					<select name="TeamIDselectProduct" id="TeamIDselectProduct" class="form-control" required>
@@ -440,5 +440,11 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
 
 
 <?php
+$queryT = null;
+$queryP = null;
+$queryU = null;
+$queryI = null;
+$queryTT = null;
+include('includes/close.php');
 }
 ?>

@@ -254,4 +254,8 @@ th
 		</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$queryL = null;
+include('includes/close.php');
+} ?>

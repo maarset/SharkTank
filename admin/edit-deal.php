@@ -111,10 +111,10 @@ if(isset($_POST['submit']))
 <body>
 <?php
 		$sql = "SELECT * from Deal where DealID = :editid";
-		$query = $dbh -> prepare($sql);
-		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
+		$queryHH = $dbh -> prepare($sql);
+		$queryHH->bindParam(':editid',$editid,PDO::PARAM_INT);
+		$queryHH->execute();
+		$result=$queryHH->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 ?>
 	<?php include('includes/header.php');?>
@@ -179,10 +179,10 @@ if(isset($_POST['submit']))
 	<div class="col-md-10">
 <?php
 	$sqlH = "SELECT DealHistoryID,DealID,DealName,TotalInvested,PercentOwned,CreatedBy,CreatedDate from  DealHistory WHERE DealID = (:dealid) ORDER BY DealHistoryID";
-	$queryH = $dbh -> prepare($sqlH);
-	$queryH-> bindParam(':dealid', $result->DealID, PDO::PARAM_STR);
-	$queryH->execute();
-	$resultH=$queryH->fetchAll(PDO::FETCH_OBJ);
+	$queryH1 = $dbh -> prepare($sqlH);
+	$queryH1-> bindParam(':dealid', $result->DealID, PDO::PARAM_STR);
+	$queryH1->execute();
+	$resultH=$queryH1->fetchAll(PDO::FETCH_OBJ);
 ?>
 <div class="stat-panel-number h3 text-left"> Deal History for  <?php echo($resultH[0]->DealName ); ?> </div>
 <table id="Ledger1" class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="40%">
@@ -215,14 +215,6 @@ if(isset($_POST['submit']))
 								</div>
 							</div>
 						</div>
-						
-					
-
-					
-				
-				
-			
-
 			</div>
 		</div>
 	</div>
@@ -247,4 +239,10 @@ if(isset($_POST['submit']))
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$queryH = null;
+$queryHH = null;
+$queryH1 = null;
+include('includes/close.php');
+} ?>

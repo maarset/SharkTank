@@ -231,4 +231,8 @@ if(isset($_POST['submit']))
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$queryC = null;
+include('includes/close.php');
+} ?>

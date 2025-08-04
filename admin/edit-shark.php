@@ -217,6 +217,10 @@ if(isset($_POST['submit']))
 </html>
 <?php 
 }
+$query = null;
+$queryL = null;
+$queryLT = null;
+include('includes/close.php');
 }
 ?>
 

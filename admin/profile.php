@@ -149,4 +149,7 @@ if(isset($_POST['submit']))
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+include('includes/close.php');
+} ?>

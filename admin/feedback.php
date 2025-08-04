@@ -23,10 +23,10 @@ if(isset($_REQUEST['unconfirm']))
 	$aeid=intval($_GET['unconfirm']);
 	$memstatus=1;
 	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
-	$query = $dbh->prepare($sql);
-	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
-	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
-	$query -> execute();
+	$query1 = $dbh->prepare($sql);
+	$query1 -> bindParam(':status',$memstatus, PDO::PARAM_STR);
+	$query1-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query1 -> execute();
 	$msg="Changes Sucessfully";
 	}
 
@@ -35,10 +35,10 @@ if(isset($_REQUEST['unconfirm']))
 	$aeid=intval($_GET['confirm']);
 	$memstatus=0;
 	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
-	$query = $dbh->prepare($sql);
-	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
-	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
-	$query -> execute();
+	$query2 = $dbh->prepare($sql);
+	$query2 -> bindParam(':status',$memstatus, PDO::PARAM_STR);
+	$query2-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query2 -> execute();
 	$msg="Changes Sucessfully";
 	}
 
@@ -189,4 +189,9 @@ foreach($results as $result)
 		</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+$query2 = null;
+include('includes/close.php');
+} ?>

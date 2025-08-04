@@ -53,4 +53,7 @@ header("Expires: 0");
 	}
 ?>
 </table>
-<?php } ?>
+<?php 
+$query = null;
+include('includes/close.php');
+} ?>

@@ -384,4 +384,17 @@ if(isset($_POST['submit']))
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$queryL = null;
+$query = null;
+$query1 = null;
+$query2 = null;
+$query3 = null;
+
+$queryBal = null;
+$queryDeb = null;
+$queryCred = null;
+$queryLT = null;
+$queryV  = null;
+include('includes/close.php');
+} ?>

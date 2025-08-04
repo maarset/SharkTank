@@ -31,10 +31,10 @@ if(isset($_REQUEST['unconfirm']))
 	$aeid=intval($_GET['unconfirm']);
 	$memstatus=1;
 	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
-	$query = $dbh->prepare($sql);
-	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
-	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
-	$query -> execute();
+	$query3 = $dbh->prepare($sql);
+	$query3 -> bindParam(':status',$memstatus, PDO::PARAM_STR);
+	$query3-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query3 -> execute();
 	$msg="Changes Sucessfully";
 	}
 
@@ -43,10 +43,10 @@ if(isset($_REQUEST['unconfirm']))
 	$aeid=intval($_GET['confirm']);
 	$memstatus=0;
 	$sql = "UPDATE users SET status=:status WHERE  id=:aeid";
-	$query = $dbh->prepare($sql);
-	$query -> bindParam(':status',$memstatus, PDO::PARAM_STR);
-	$query-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
-	$query -> execute();
+	$query4 = $dbh->prepare($sql);
+	$query4 -> bindParam(':status',$memstatus, PDO::PARAM_STR);
+	$query4-> bindParam(':aeid',$aeid, PDO::PARAM_STR);
+	$query4 -> execute();
 	$msg="Changes Sucessfully";
 	}
     
@@ -116,7 +116,6 @@ if(isset($_REQUEST['unconfirm']))
 
 <body>
 	<?php include('includes/header.php');?>
-
 	<div class="ts-main-content">
 		<?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
@@ -286,4 +285,11 @@ if(isset($_REQUEST['unconfirm']))
 		
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query2 = null;
+$query3 = null;
+$query4 = null;
+$queryS = null;
+include('includes/close.php');
+} ?>

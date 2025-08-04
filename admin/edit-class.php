@@ -13,11 +13,6 @@ else {
 if(isset($_GET['ClassID'])) 
 	{
 		$classid=$_GET['ClassID'];
-
-		
-
-
-	
 if(isset($_POST['submit']))
   {
 
@@ -259,6 +254,13 @@ if(isset($_POST['CurrentClass']))
 </html>
 <?php 
 }
+
+$queryG = null;
+$queryG1 = null;
+$query = null;
+$queryL = null;
+$queryLT = null;
+include('includes/close.php');
 }
 ?>
 

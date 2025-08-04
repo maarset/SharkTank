@@ -94,7 +94,7 @@ echo "<script type='text/javascript'>alert('Team Deleted Sucessfully!');</script
 				<div class="row">
 					<div class="col-md-12">
 
-						<h2 class="page-title">Manage Teams - <?php echo($CurrentClassGlobal . ' - '.  $CurrentSchoolyearGlobal) ?></h2>
+						<h4 class="page-title">Manage Teams - <?php echo($CurrentClassGlobal)  ?></h4>
 						
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
@@ -186,4 +186,7 @@ foreach($results as $result)
 		
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+include('includes/close.php');
+} ?>

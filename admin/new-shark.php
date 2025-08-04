@@ -258,4 +258,8 @@ if(isset($_POST['submit']))
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$queryLT = null;
+include('includes/close.php');
+} ?>

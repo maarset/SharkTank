@@ -279,3 +279,11 @@ $(document).ready(function () {
 </script>
 </body>
 </html>
+
+<?php
+$queryCheck = null;
+$querynoti = null;
+$query = null;
+$queryTeam = null;
+include('includes/close.php');
+?>

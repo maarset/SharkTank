@@ -262,4 +262,12 @@ if(isset($_POST['submit']))
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$queryCheck= null;
+$queryL = null;
+$queryI = null;
+$queryH = null;
+$querySS = null;
+$queryS = null;
+include('includes/close.php');
+} ?>

@@ -80,6 +80,7 @@ $dbh = null;
 	<link rel="stylesheet" href="css/fileinput.min.css">
 	<link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
 	<link rel="stylesheet" href="css/style.css">
+	
 
 </head>
 
@@ -97,7 +98,7 @@ $dbh = null;
 								<form method="post">
 
 									<label for="" class="text-uppercase text-sm">Your Email</label>
-									<input type="text" placeholder="Username" name="username" class="form-control mb" required>
+									<input type="text" placeholder="Username" name="username" class="form-control mb" autofocus required>
 
 									<label for="" class="text-uppercase text-sm">Password</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
@@ -129,8 +130,17 @@ $dbh = null;
 	<script src="js/Chart.min.js"></script>
 	<script src="js/fileinput.js"></script>
 	<script src="js/chartData.js"></script>
-	<script src="js/main.js"></script>
+	<!--<script src="js/main.js"></script>-->
+	
 
 </body>
 
+
+
 </html>
+<?php
+$query = null;
+$querynotiC = null;
+$querynoti = null;
+include('includes/close.php');
+?>

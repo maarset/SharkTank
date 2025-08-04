@@ -12,24 +12,6 @@ else{
 	
 if(isset($_POST['submit']))
   {
-	echo ("EMAIL = " . $_SESSION['alogin'] . "<BR>");
-
-	//	$email = $_SESSION['alogin'];
-	//	//$sqlU = "SELECT  U.TeamID,T.TeamName FROM users AS U, Team AS T WHERE U.TeamID = T.TeamID AND U.email = (:email)";
-	//	$sqlU = "SELECT  TeamID FROM users  WHERE email = (:email)";
-	//	$queryU = $dbh -> prepare($sqlU);
-	//	$queryU->bindParam(':email',$email,PDO::PARAM_INT);
-	//	$queryU->execute();
-	//	$resultU=$queryU->fetch(PDO::FETCH_OBJ);
-	//	echo "<script type='text/javascript'>alert('$queryU->rowCount()');</script>";
-	//	//$TeamID = $resultU->TeamID;
-	//	//$TeamName = $resultU->TeamName;
-		
-		
-		
-		
-		//echo ("TeamName = " . $TeamName . "<BR>");
-	//	echo ("sqlU = " . $sqlU . "<BR>");
 	
 	$TeamID = $_GET['TeamID'];
 	$LedgerTypeID=$_POST['LedgerTypeID'];
@@ -410,5 +392,16 @@ if(isset($_POST['submit']))
 </body>
 </html>
 <?php 
-$dbh = null;
+$queryL = null;
+$query = null;
+$query1 = null;
+$query2 = null;
+$query3 = null;
+$queryBal = null;
+$queryDeb = null;
+$queryCred = null;
+$queryLT = null;
+$queryP = null;
+$queryV = null;
+include('includes/close.php');
 } ?>

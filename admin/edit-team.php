@@ -102,10 +102,10 @@ if(isset($_POST['submit']))
 <body>
 <?php
 		$sql = "SELECT * from Team where TeamID = :editid";
-		$query = $dbh -> prepare($sql);
-		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
+		$query1 = $dbh -> prepare($sql);
+		$query1->bindParam(':editid',$editid,PDO::PARAM_INT);
+		$query1->execute();
+		$result=$query1->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 ?>
 	<?php include('includes/header.php');?>
@@ -261,4 +261,10 @@ if(isset($_POST['submit']))
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+$queryC = null;
+$queryS = null;
+include('includes/close.php');
+} ?>

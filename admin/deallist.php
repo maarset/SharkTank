@@ -126,13 +126,13 @@ $sql .= "S.SharkID,S.SharkName ";
 $sql .= "from  Deal D,Team AS T,Class AS C,Shark AS S ";
 $sql .= "WHERE D.TeamID = T.TeamID AND D.ClassID = C.ClassID AND D.SharkID = S.SharkID ";
 $sql .= "AND D.ClassID = (:classid)  ";
-$query = $dbh -> prepare($sql);
+$query1 = $dbh -> prepare($sql);
 //$query-> bindParam(':ClassID', $ClassIDGlobal, PDO::PARAM_STR);
-$query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
+$query1-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+$query1->execute();
+$results=$query1->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
-if($query->rowCount() > 0)
+if($query1->rowCount() > 0)
 {
 foreach($results as $result)
 {				?>	
@@ -188,4 +188,8 @@ foreach($results as $result)
 		
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+include('includes/close.php');
+} ?>

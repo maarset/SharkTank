@@ -2,7 +2,7 @@
 session_start();
 
 include('includes/config.php'); 
-if(strlen($_SESSION['alogin'])==0)
+if(strlen($_SESSION['alogin'])==0) 
 	{	
 header('location:index.php');
 }
@@ -108,10 +108,10 @@ if(isset($_POST['submit']))
 	
 
 		$sqlTeam = "SELECT TeamID,TeamName FROM Team where Status = 1";
-$queryTeam= $dbh -> prepare($sqlTeam);
+		$queryTeam= $dbh -> prepare($sqlTeam);
 
-$queryTeam->execute();
-$results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
+		$queryTeam->execute();
+		$results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
 
 
 ?>
@@ -222,4 +222,8 @@ if(strlen($_SESSION['alogin'])==0)
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query= null;
+$queryTeam = null;
+include('includes/close.php');
+} ?>

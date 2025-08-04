@@ -200,5 +200,7 @@ mail($to,$subject,$txt,$headers);
 </body>
 </html>
 <?php 
-$dbh = null;
+$querynoti = null;
+$query = null;
+include('includes/close.php');
 } ?>

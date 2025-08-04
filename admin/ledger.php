@@ -1,5 +1,5 @@
 <?php 
-session_start();
+session_start(); 
 
 include('includes/config.php');
 if(strlen($_SESSION['alogin'])==0 || $_SESSION['alogin'] != 'admin')
@@ -173,7 +173,7 @@ th
 
 
 <body>
-	<?php include('includes/header.php');?> 
+	<?php include('includes/header.php');?>  
 
 	<div class="ts-main-content" >
 		<?php include('includes/leftbar.php');?>
@@ -305,38 +305,38 @@ th
 						<?php 
 									//Start Up Capital Value
 									$sql1 = "SELECT L.LedgerID, L.LedgerTypeID,LT.Description,L.TeamID,L.SchoolYearID,L.Amount,CAST(L.dateentered AS DATE) AS DateEntered from  Ledger AS L, LedgerType AS LT where LT.LedgerTypeID = L.LedgerTypeID AND L.Status = 1 AND L.TeamID = (:TeamID) AND L.LedgerTypeID = 15";
-									$query1 = $dbh -> prepare($sql1);
-									$query1-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-									$query1->execute();
-									$result1=$query1->fetchAll(PDO::FETCH_OBJ);
+									$query4 = $dbh -> prepare($sql1);
+									$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+									$query4->execute();
+									$result1=$query4->fetchAll(PDO::FETCH_OBJ);
 						
 									//Wire Amounts
 									$sql2 = "SELECT L.LedgerID, L.LedgerTypeID,LT.Description,L.TeamID,L.SchoolYearID,L.Amount,CAST(L.dateentered AS DATE) AS DateEntered from  Ledger AS L, LedgerType AS LT where LT.LedgerTypeID = L.LedgerTypeID AND L.Status = 1 AND L.TeamID = (:TeamID) AND L.LedgerTypeID = 16";
-									$query2 = $dbh -> prepare($sql2);
-									$query2-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-									$query2->execute();
-									$result2=$query2->fetchAll(PDO::FETCH_OBJ);
+									$query5 = $dbh -> prepare($sql2);
+									$query5-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+									$query5->execute();
+									$result2=$query5->fetchAll(PDO::FETCH_OBJ);
 
 									//AMOUNT LEFT
 									$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
-									$query3 = $dbh -> prepare($sql3);
-									$query3-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-									$query3->execute();
-									$result3=$query3->fetchAll(PDO::FETCH_OBJ);
+									$query6 = $dbh -> prepare($sql3);
+									$query6-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+									$query6->execute();
+									$result3=$query6->fetchAll(PDO::FETCH_OBJ);
 
 									//Product
 									$sql4 = "SELECT * from  Product where TeamID = (:TeamID) AND Status = 1";
-									$query4 = $dbh -> prepare($sql4);
-									$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-									$query4->execute();
-									$result4=$query4->fetchAll(PDO::FETCH_OBJ);
+									$query7 = $dbh -> prepare($sql4);
+									$query7-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+									$query7->execute();
+									$result4=$query7->fetchAll(PDO::FETCH_OBJ);
 
 									//Weekly Exp  AVG\
 									$sql5 = "SELECT AVG(L.Amount) AS AVG,week(L.dateentered) AS WEEK,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount < 0  group by week(L.dateentered) ORDER BY week(L.dateentered) asc";
-									$query5 = $dbh -> prepare($sql5);
-									$query5-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-									$query5->execute();
-									$result5=$query5->fetchAll(PDO::FETCH_OBJ);
+									$query8 = $dbh -> prepare($sql5);
+									$query8-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+									$query8->execute();
+									$result5=$query8->fetchAll(PDO::FETCH_OBJ);
 ?>
 			<div class="row">
 				<div class="col-md-4">
@@ -519,4 +519,22 @@ th
 		</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+$query2 = null;
+$query3 = null;
+
+$queryBal = null;
+$queryDeb = null;
+$queryCred = null;
+
+$queryT = null;
+$queryL = null;
+$query4  = null;
+$query5 = null;
+$query6 = null;
+$query7 = null;
+$query8 = null;
+include('includes/close.php');
+} ?>

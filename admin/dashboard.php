@@ -43,7 +43,7 @@ else{
 <body>
 <?php include('includes/header.php');?>
 
-	<div class="ts-main-content">
+	<div class="ts-main-content"> 
 <?php include('includes/leftbar.php');?>
 		<div class="content-wrapper">
 			<div class="container-fluid">
@@ -223,17 +223,17 @@ else{
 
 													<?php
 											$sql1 = "SELECT L.LedgerID, L.LedgerTypeID,LT.Description,L.TeamID,L.SchoolYearID,L.Amount,CAST(L.dateentered AS DATE) AS DateEntered from  Ledger AS L, LedgerType AS LT where LT.LedgerTypeID = L.LedgerTypeID AND L.Status = 1 AND L.TeamID = (:TeamID) AND L.LedgerTypeID = 15";
-											$query1 = $dbh -> prepare($sql1);
-											$query1-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-											$query1->execute();
-											$result1=$query1->fetchAll(PDO::FETCH_OBJ);
+											$query2 = $dbh -> prepare($sql1);
+											$query2-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+											$query2->execute();
+											$result1=$query2->fetchAll(PDO::FETCH_OBJ);
 
 											//Wire Amounts
 											$sql2 = "SELECT L.LedgerID, L.LedgerTypeID,LT.Description,L.TeamID,L.SchoolYearID,L.Amount,CAST(L.dateentered AS DATE) AS DateEntered from  Ledger AS L, LedgerType AS LT where LT.LedgerTypeID = L.LedgerTypeID AND L.Status = 1 AND L.TeamID = (:TeamID) AND L.LedgerTypeID = 16";
-											$query2 = $dbh -> prepare($sql2);
-											$query2-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-											$query2->execute();
-											$result2=$query2->fetchAll(PDO::FETCH_OBJ);
+											$query3 = $dbh -> prepare($sql2);
+											$query3-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+											$query3->execute();
+											$result2=$query3->fetchAll(PDO::FETCH_OBJ);
 											//Get Total Wire Amounts
 											$TotalInvested = 0;
 											foreach($result2 as $res2)
@@ -243,19 +243,19 @@ else{
 
 											//AMOUNT LEFT
 											$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
-											$query3 = $dbh -> prepare($sql3);
-											$query3-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-											$query3->execute();
-											$result3=$query3->fetchAll(PDO::FETCH_OBJ);
+											$query4 = $dbh -> prepare($sql3);
+											$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+											$query4->execute();
+											$result3=$query4->fetchAll(PDO::FETCH_OBJ);
 
 											$DealExists = false;
 											$sql4 = "SELECT D.DealID,D.DealName,D.PercentOwned,D.TotalInvested,S.SharkName ";
 											$sql4 .= "FROM Deal AS D, Shark AS S WHERE D.SharkID = S.SharkID AND D.Status = 1 AND D.TeamID = (:teamid)";
-											$query4 = $dbh -> prepare($sql4);
-											$query4-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
-											$query4->execute();
-											$result4=$query4->fetch(PDO::FETCH_OBJ);
-											if($query4->rowCount() > 0)
+											$query5 = $dbh -> prepare($sql4);
+											$query5-> bindParam(':teamid', $teamid, PDO::PARAM_STR);
+											$query5->execute();
+											$result4=$query5->fetch(PDO::FETCH_OBJ);
+											if($query5->rowCount() > 0)
 												{
 													$DealExists = true;
 												}
@@ -406,4 +406,22 @@ else{
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+$query12 = null;
+$query6 = null;
+$queryT = null;
+$queryP = null;
+
+$queryP1 = null;
+$queryP2 = null;
+$queryP3 = null;
+
+$query2 = null;
+$query3 = null;
+$query4 = null;
+$query5 = null;
+
+include('includes/close.php');
+} ?>

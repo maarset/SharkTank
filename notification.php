@@ -122,4 +122,7 @@ foreach($results as $result)
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+include('includes/close.php');
+} ?>

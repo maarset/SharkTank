@@ -285,6 +285,18 @@ $teamid =$_POST['TeamID'];
 </html>
 <?php 
 }
+$query = null;
+$query1 = null;
+$query2 = null;
+$query3 = null;
+
+$queryBal = null;
+$queryDeb = null;
+$queryCred = null;
+
+$queryL = null;
+$queryT = null;
+include('includes/close.php');
 }
 ?>
 

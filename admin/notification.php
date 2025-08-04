@@ -95,13 +95,13 @@ if(isset($_POST['submit']))
 <?php 
 $reciver = 'Admin';
 $sql = "SELECT * from  notification where notireciver = (:reciver) and classid = (:classid) order by time DESC";
-$query = $dbh -> prepare($sql);
-$query-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
-$query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
+$query1 = $dbh -> prepare($sql);
+$query1-> bindParam(':reciver', $reciver, PDO::PARAM_STR);
+$query1-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
+$query1->execute();
+$results=$query1->fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
-if($query->rowCount() > 0)
+if($query1->rowCount() > 0)
 {
 foreach($results as $result)
 {				
@@ -139,4 +139,8 @@ foreach($results as $result)
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+include('includes/close.php');
+} ?>

@@ -157,10 +157,10 @@ if ($passwordreset == "true")
 <body>
 <?php
 		$sql = "SELECT * from users where id = :editid";
-		$query = $dbh -> prepare($sql);
-		$query->bindParam(':editid',$editid,PDO::PARAM_INT);
-		$query->execute();
-		$result=$query->fetch(PDO::FETCH_OBJ);
+		$query1 = $dbh -> prepare($sql);
+		$query1->bindParam(':editid',$editid,PDO::PARAM_INT);
+		$query1->execute();
+		$result=$query1->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 ?>
 	<?php include('includes/header.php');?>
@@ -360,4 +360,10 @@ if ($passwordreset == "true")
 
 </body>
 </html>
-<?php } ?>
+<?php 
+$query = null;
+$query1 = null;
+$queryT = null;
+
+include('includes/close.php');
+} ?>

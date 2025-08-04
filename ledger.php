@@ -235,7 +235,7 @@ foreach($resultLs as $result)
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> 
 
 	<!-- Loading Scripts -->
 
@@ -281,5 +281,7 @@ foreach($resultLs as $result)
 </html>
 <?php
 $queryT = null;
-$dbh = null;
+$queryL = null;
+$queryS = null;
+include('includes/close.php');
 } ?>

@@ -181,4 +181,8 @@ mail($to,$subject,$txt,$headers);
 	</script>
 </body>
 </html>
-<?php } ?>
+<?php 
+$querynoti = null;
+$query = null;
+include('includes/close.php');
+} ?>

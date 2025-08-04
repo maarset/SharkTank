@@ -65,7 +65,7 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
 								<form method="post">
 
 									<label for="" class="text-uppercase text-sm">Your Username </label>
-									<input type="text" placeholder="Username" name="username" class="form-control mb" required>
+									<input type="text" placeholder="Username" name="username" class="form-control mb" autofocus required>
 
 									<label for="" class="text-uppercase text-sm">Password</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
@@ -93,3 +93,11 @@ echo "<script type='text/javascript'> document.location = 'dashboard.php'; </scr
 </body>
 
 </html>
+
+<?php
+
+$query = null;
+$querynoti = null;
+
+include('includes/close.php');
+?>

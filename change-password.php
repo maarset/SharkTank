@@ -194,5 +194,7 @@ return true;
 
 </html>
 <?php 
-$dbh = null;
+$query = null;
+$chngpwd1 = null;
+include('includes/close.php');
 } ?>
