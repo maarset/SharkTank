@@ -22,22 +22,23 @@ if(isset($_POST['submit']))
 	$designation=$_POST['designation'];
 	$idedit=$_POST['editid'];
 	$image=$_POST['image'];
-	$team=$_POST['team'];
+	
     
 	if(move_uploaded_file($file_loc,$folder.$final_file))
 		{
 			$image=$final_file;
 		}
 
-	$sql="UPDATE users SET name=(:name), email=(:email), mobile=(:mobileno), designation=(:designation), Image=(:image), TeamID=(:team) WHERE id=(:idedit)";
+	$sql="UPDATE users SET name=(:name), email=(:email), mobile=(:mobileno), designation=(:designation), Image=(:image) WHERE id=(:idedit)";
 	$query = $dbh->prepare($sql);
 	$query-> bindParam(':name', $name, PDO::PARAM_STR);
 	$query-> bindParam(':email', $email, PDO::PARAM_STR);
 	$query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
 	$query-> bindParam(':designation', $designation, PDO::PARAM_STR);
 	$query-> bindParam(':image', $image, PDO::PARAM_STR);
-	$query-> bindParam(':team', $team, PDO::PARAM_STR);
+	
 	$query-> bindParam(':idedit', $idedit, PDO::PARAM_STR);
+	
 	$query->execute();
 	$msg="Information Updated Successfully";
 }    
@@ -99,17 +100,18 @@ if(isset($_POST['submit']))
 <body>
 <?php
 		$email = $_SESSION['alogin'];
-		$sql = "SELECT * from users where email = (:email);";
+		$sql = "SELECT * from users where email = (:email) and ClassID =:classid ;";
 		$query = $dbh -> prepare($sql);
 		$query-> bindParam(':email', $email, PDO::PARAM_STR);
+		$query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 		$query->execute();
 		$result=$query->fetch(PDO::FETCH_OBJ);
 		$cnt=1;	
 	
 
-		$sqlTeam = "SELECT TeamID,TeamName FROM Team where Status = 1";
+		$sqlTeam = "SELECT TeamID,TeamName FROM Team where Status = 1 and ClassID =:classid ";
 		$queryTeam= $dbh -> prepare($sqlTeam);
-
+		$queryTeam-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 		$queryTeam->execute();
 		$results=$queryTeam->fetchAll(PDO::FETCH_OBJ);
 
@@ -164,7 +166,7 @@ if(isset($_POST['submit']))
 
 	<label class="col-sm-2 control-label">Designation<span style="color:red">*</span></label>
 	<div class="col-sm-4">
-	<input type="text" name="designation" class="form-control" required value="<?php echo htmlentities($result->designation);?>">
+	<input type="text" name="designation" class="form-control" required READONLY value="<?php echo htmlentities($result->designation);?>">
 	</div>
 </div>
 

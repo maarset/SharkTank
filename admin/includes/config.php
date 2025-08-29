@@ -66,7 +66,7 @@ $sqlY = "SELECT SchoolYearID,YearName FROM SchoolYear WHERE SchoolYearID = (:sch
 
 
 global $AdminEmail;
-$AdminEmail = "slseacrist@gmail.com";
+$AdminEmail = "scott.seacrist@goatcrist.us";
 
 global $AdminCC;
 $AdminCC = "slseacrist@gmail.com";

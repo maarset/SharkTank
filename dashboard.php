@@ -72,7 +72,7 @@ if(strlen($_SESSION['alogin'])==0)
 			<div class="container-fluid">
 
 				<div class="row">
-					<div class="col-md-12">
+					<div class="col-md-12"> 
 
 						<h2 class="page-title">Dashboard <?php echo ($teamname); ?></h2>
 						
@@ -132,6 +132,7 @@ if(strlen($_SESSION['alogin'])==0)
         							$queryP->execute();
         							$resultP=$queryP->fetch(PDO::FETCH_OBJ);
 								
+									
 								?>
 									<div class="col-md-4">
 										<div class="panel panel-default">
@@ -142,9 +143,18 @@ if(strlen($_SESSION['alogin'])==0)
 												<?php 											
 												if($queryP->rowCount() > 0)
 												{
-													$p1 = "SELECT SUM(Amount) AS P1 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (8,9,10,11,12)";
-													$p2 = "SELECT SUM(Amount) AS P2 FROM Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (1,2,3)";
-													$p3 = "SELECT SUM(Amount) AS P3 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (4,5,6)";
+													//AMOUNT LEFT
+														$remaining = 0;
+														$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
+														$query4 = $dbh -> prepare($sql3);
+														$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+														$query4->execute();
+														$result3=$query4->fetch(PDO::FETCH_OBJ);
+														$remaining = $result3->Sum;
+
+													$p1 = "SELECT SUM(Amount) AS P1 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (8,9,10,11,12) and status = 1";
+													$p2 = "SELECT SUM(Amount) AS P2 FROM Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (1,2,3) and status = 1";
+													$p3 = "SELECT SUM(Amount) AS P3 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (4,5,6) and status = 1";
 													$queryP1 = $dbh -> prepare($p1);
 													$queryP2 = $dbh -> prepare($p2);
 													$queryP3 = $dbh -> prepare($p3);
@@ -160,6 +170,18 @@ if(strlen($_SESSION['alogin'])==0)
 													$P1Amt = $resultP1->P1;
 													$P2Amt = $resultP2->P2;
 													$P3Amt = $resultP3->P3;
+													if ($P1Amt == null)
+													{
+														$P1Amt = 0;
+													}
+													if ($P2Amt == null)
+													{
+														$P2Amt = 0;
+													}
+													if ($P3Amt == null)
+													{
+														$P3Amt = 0;
+													}
 												?> 
 													<table  class="display table table-striped table-bordered table-hover" cellpadding="0" cellspacing="0" width="80%">
 													<TR><TD>Retail Margin: </TD><TD><?php echo htmlentities('$'.$resultP->RetailPrice - $resultP->InputCost );?></td></tr>
@@ -175,8 +197,17 @@ if(strlen($_SESSION['alogin'])==0)
 												$S32 = (28 * -1234);
 												$TotalValue = (($P1Amt * 72.5) + ($P2Amt * 55.1) + ($P3Amt * 20) + ($S28 * 80) + ($S32 * 60));
 												}
+												if ($TotalValue <> 0 && (($P1Amt + $P2Amt + $P3Amt) <> 0 ))
+												{
 												?>
-													<div class="stat-panel-title text-uppercase"><strong>Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?></strong></div>  
+													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?> 
+												<?php 
+												} else {											
+												?>	
+													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. $remaining );?> 
+												<?php
+												}												
+												?>
 												</div>
 												</div>
 											</div>
@@ -184,7 +215,7 @@ if(strlen($_SESSION['alogin'])==0)
 									</div>
 									<?php
 									//$sql5 = "SELECT AVG(L.Amount) AS AVG,month(L.dateentered) AS MONTH,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount <> 0  group by month(L.dateentered) ORDER BY month(L.dateentered) asc";
-									$sql5 = "SELECT AVG(L.Amount) AS AVG,week(L.dateentered) AS WEEK,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount < 0  group by week(L.dateentered) ORDER BY L.dateentered asc";
+									$sql5 = "SELECT AVG(L.Amount) AS AVG,week(L.dateentered) AS WEEK,L.dateentered from Ledger AS L WHERE  L.TeamID = (:TeamID) and L.Amount < 0 and L.status = 1  group by week(L.dateentered) ORDER BY L.dateentered asc";
 									$query5 = $dbh -> prepare($sql5);
 									$query5-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
 									$query5->execute();

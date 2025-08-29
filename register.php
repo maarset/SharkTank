@@ -23,6 +23,10 @@ if(isset($_POST['submit']))
     	{
     		$image=$final_file;
         }
+        else
+        {
+            $image="";
+        }
     $notitype='Create Account';
     $reciver='Admin';
     $sender=$email;
@@ -74,10 +78,10 @@ if(isset($_POST['submit']))
                 $query-> bindParam(':gender', $gender, PDO::PARAM_STR);
                 $query-> bindParam(':mobileno', $mobileno, PDO::PARAM_STR);
                 $query-> bindParam(':designation', $designation, PDO::PARAM_STR); 
-                if ($designation == "Student")
-                {
+             //   if ($designation == "Student")
+             //   {
                 $query-> bindParam(':team', $team, PDO::PARAM_STR);
-                }
+             //   }
                 $query-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
                 $query-> bindParam(':image', $image, PDO::PARAM_STR);
                 $query->execute();
@@ -148,8 +152,9 @@ if(isset($_POST['submit']))
                 
                 }
             }
-            alert("Image Extension Not Valid (Use Jpg,jpeg)");
-            return false;
+         //   alert("Image Extension Not Valid (Use Jpg,jpeg)");
+         //   return false;
+            return true;
         }
         
 </script>
@@ -186,8 +191,8 @@ if(isset($_POST['submit']))
                             <div class="col-sm-5">
                             <select name="designation" id="designation" class="form-control" required>
                             <option value="">Select</option>
-                            <option value="Student">Student</option>
-                            <option value="Shark">Sharp (under construction)</option>
+                            <option value="Student" SELECTED>Student</option>
+                            <option value="Shark">Shark (under construction)</option>
                             </select>
                             </div>
                             </div>
@@ -209,7 +214,7 @@ if(isset($_POST['submit']))
                             </div>
 
                              <div class="form-group">
-                            <label class="col-sm-1 control-label">Avtar<span style="color:red">*</span></label>
+                            <label class="col-sm-1 control-label">Avtar</label>
                             <div class="col-sm-5">
                             <div><input type="file" name="image" class="form-control"></div>
                             </div>

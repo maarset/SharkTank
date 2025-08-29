@@ -163,6 +163,8 @@ else{
         							$queryP-> bindParam(':TeamID', $res->TeamID, PDO::PARAM_STR);
         							$queryP->execute();
         							$resultP=$queryP->fetch(PDO::FETCH_OBJ);
+
+									$teamid = $res->TeamID;
 									if ($x == 5)
 									{
 									?>
@@ -171,15 +173,29 @@ else{
 									} ?>
 									<div class="col-md-3">
 										<div class="panel panel-default">
-											<div class="stat-panel-number h3 text-center"><?php echo htmlentities($res->TeamName . ' ' . $res->TeamID);?> </div>
+											<div class="stat-panel-number h3 text-center"><?php echo htmlentities($res->TeamName);?> </div>
 												<div class="panel-body bk-primary text-light">
 													<div class="stat-panel text-left">
 													<?php 
 													if($queryP->rowCount() > 0)
-												{
-													$p1 = "SELECT SUM(Amount) AS P1 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (8,9,10,11,12)";
-													$p2 = "SELECT SUM(Amount) AS P2 FROM Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (1,2,3)";
-													$p3 = "SELECT SUM(Amount) AS P3 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND MONTH(dateentered) IN (4,5,6)";
+													{
+
+														//AMOUNT LEFT
+														$remaining = 0;
+														$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
+														$query4 = $dbh -> prepare($sql3);
+														$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+														$query4->execute();
+														$result3=$query4->fetch(PDO::FETCH_OBJ);
+														$remaining = $result3->Sum;
+
+													//	echo ('Remaining Amount = ' . $remaining. '<BR>');
+													//	echo ('$teamid = ' . $teamid. '<BR>');
+													//	echo ('SQL = ' . $sql3 . '<BR>');
+
+													$p1 = "SELECT SUM(Amount) AS P1 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND Status = 1  AND MONTH(dateentered) IN (8,9,10,11,12)";
+													$p2 = "SELECT SUM(Amount) AS P2 FROM Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND  Status = 1 AND  MONTH(dateentered) IN (1,2,3)";
+													$p3 = "SELECT SUM(Amount) AS P3 FROM  Ledger where TeamID = :teamid AND LedgerTypeID = 7 AND Status = 1  AND MONTH(dateentered) IN (4,5,6)";
 													$queryP1 = $dbh -> prepare($p1);
 													$queryP2 = $dbh -> prepare($p2);
 													$queryP3 = $dbh -> prepare($p3);
@@ -195,8 +211,23 @@ else{
 													$P1Amt = $resultP1->P1;
 													$P2Amt = $resultP2->P2;
 													$P3Amt = $resultP3->P3;
-
-													$teamid = $res->TeamID;
+													if ($P1Amt == null)
+													{
+														$P1Amt = 0;
+													}
+													if ($P2Amt == null)
+													{
+														$P2Amt = 0;
+													}
+													if ($P3Amt == null)
+													{
+														$P3Amt = 0;
+													}
+												//	echo('P1Amt = ' . $P1Amt . '<BR>');
+												//	echo('P2Amt = ' . $P2Amt . '<BR>');
+												//	echo('P3Amt = ' . $P3Amt . '<BR>');
+													//$teamid = $res->TeamID;
+													
 												?>
 													<table class=" table  " cellspacing="0" width="100%">
 													<TR><TD>Retail Margin: </TD><TD><?php echo htmlentities('$'.$resultP->RetailPrice - $resultP->InputCost );?></td></tr>
@@ -207,16 +238,38 @@ else{
 													<TR><TD>Total Order Input: </TD><TD><?php echo htmlentities('$'.(($resultP->RetailPrice - $resultP->InputCost ) * ($resultP->QtySoldRetail)) + (($resultP->WholeSalePrice - $resultP->InputCost ) * ($resultP->QtySoldWholesale)) + ((($resultP->WholeSalePrice - $resultP->InputCost) / (2) ) * ($resultP->NumberofPotentialCustomers))  );?></td></tr>
 												</table>
 												<?php
+										
+
+												//	echo('RetailPrice =' . $resultP->RetailPrice . '<BR>');
+												//	echo('InputCost =' . $resultP->InputCost . '<BR>');
+												//	echo('QtySoldRetail =' . $resultP->QtySoldRetail . '<BR>');
+												//	echo('WholeSalePrice =' . $resultP->WholeSalePrice . '<BR>');
+												//	echo('InputCost =' . $resultP->InputCost . '<BR>');
+												//	echo('QtySoldWholesale =' . $resultP->QtySoldWholesale . '<BR>');
+												//	echo('WholeSalePrice =' . $resultP->WholeSalePrice . '<BR>');
+												//	echo('InputCost =' . $resultP->InputCost . '<BR>');
+												//	echo('NumberofPotentialCustomers =' . $resultP->NumberofPotentialCustomers . '<BR>');
+
 												$V11= (($resultP->RetailPrice - $resultP->InputCost ) * ($resultP->QtySoldRetail)) + (($resultP->WholeSalePrice - $resultP->InputCost ) * ($resultP->QtySoldWholesale)) + ((($resultP->WholeSalePrice - $resultP->InputCost) / (2) ) * ($resultP->NumberofPotentialCustomers));  
 												$S28 = ($V11 * -321);
 												$S32 = (28 * -1234);
+												
+												//echo('$V11 = ' . $V11 .  '<BR>');
+												//echo('$S28 = ' . $S28 .  '<BR>');
+												//echo('$S32 = ' . $S32 .  '<BR>');
+
 												$TotalValue = (($P1Amt * 72.5) + ($P2Amt * 55.1) + ($P3Amt * 20) + ($S28 * 80) + ($S32 * 60));
+												//echo ( 'MARKETING TOTAL = ' . ($P1Amt + $P2Amt + $P3Amt));
 												}
-												if ($TotalValue <> 0)
+												//We must have some value from LedgerType Marketing transactions. If we don't then we give sum of Ledger Table for that team
+												if ($TotalValue <> 0 && (($P1Amt + $P2Amt + $P3Amt) <> 0 ))
 												{
 												?>
 													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. number_format(abs($TotalValue), 2, '.', ',') );?> 
-													
+												<?php 
+												} else {											
+												?>	
+													<div class="stat-panel-title text-uppercase">Company Value: <?php echo htmlentities('$'. $remaining );?> 
 												<?php
 												}												
 												?>
@@ -241,12 +294,12 @@ else{
 												$TotalInvested += $res2->Amount;
 											}
 
-											//AMOUNT LEFT
-											$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
-											$query4 = $dbh -> prepare($sql3);
-											$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
-											$query4->execute();
-											$result3=$query4->fetchAll(PDO::FETCH_OBJ);
+				//							//AMOUNT LEFT
+				//							$sql3 = "SELECT SUM(L.AMOUNT) AS Sum FROM Ledger AS L where L.Status = 1 AND L.TeamID = (:TeamID)";
+				//							$query4 = $dbh -> prepare($sql3);
+				//							$query4-> bindParam(':TeamID', $teamid, PDO::PARAM_STR);
+				//							$query4->execute();
+				//							$result3=$query4->fetchAll(PDO::FETCH_OBJ);
 
 											$DealExists = false;
 											$sql4 = "SELECT D.DealID,D.DealName,D.PercentOwned,D.TotalInvested,S.SharkName ";
@@ -308,7 +361,8 @@ else{
 											foreach($result3 as $res3)
 											{
 											echo('<TR>');
-											echo('<TH>Remaining:  </TH><TH>$' . $res3->Sum . '</TH><TH></TH>');
+											//echo('<TH>Remaining:  </TH><TH>$' . $res3->Sum . '</TH><TH></TH>');
+											echo('<TH>Remaining:  </TH><TH>$' .$remaining. '</TH><TH></TH>');
 											echo('</tr>');
 											}
 											?>
@@ -352,6 +406,7 @@ else{
 									//}
 									$x++;
 									$TotalValue = null;
+									$remaining = null;
 									$P1Amt = null;
 									$P2Amt = null;
 									$P3Amt = null;

@@ -96,13 +96,27 @@ $dbh = null;
 						<div class="well row pt-2x pb-3x bk-light">
 							<div class="col-md-8 col-md-offset-2">
 								<form method="post">
-
+									<?php
+									if ($Maintenance)
+									{ ?>
+									<article>
+									    <h1>We&rsquo;ll be back soon!</h1>
+									    <div>
+									        <p>Sorry for the inconvenience but we&rsquo;re performing some maintenance at the moment. If you need to you can always <a href="mailto:scott.seacrist@goatcrist.us">contact us</a>, otherwise we&rsquo;ll be back online shortly!</p>
+									        <p>&mdash; The GOATCRIST</p>
+									    </div>
+									</article>
+							  		<?php 
+									} else { ?>
 									<label for="" class="text-uppercase text-sm">Your Email</label>
 									<input type="text" placeholder="Username" name="username" class="form-control mb" autofocus required>
 
 									<label for="" class="text-uppercase text-sm">Password</label>
 									<input type="password" placeholder="Password" name="password" class="form-control mb" required>
 									<button class="btn btn-primary btn-block" name="login" type="submit">LOGIN</button>
+									<?php
+									}
+									?>
 								</form>
 								<br>
 								<?php 

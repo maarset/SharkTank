@@ -73,6 +73,9 @@ $sqlY = "SELECT SchoolYearID,YearName FROM SchoolYear WHERE SchoolYearID = (:sch
 global $Registration;
 $Registration = True; // if True new accounts are allowed to be setup.
 
+global $Maintenance;
+$Maintenance = False;
+
 global $AdminEmail;
 $AdminEmail = "scott.seacrist@goatcrist.us";
 
@@ -82,6 +85,6 @@ $AdminCC = "slseacrist@gmail.com";
 global $AdminBCC;
 $AdminBCC = "michael.aarset@gmail.com";
 
-//error_reporting(E_ALL);
-error_reporting(0);
+error_reporting(E_ALL);
+//error_reporting(0);
 ?>

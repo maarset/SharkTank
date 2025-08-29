@@ -73,6 +73,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
 	{
 		$image=$final_file;
     }
+    else
+    {
+        $image="";
+    }
 
     if ($ProductStatus == "Update")
     {
@@ -124,7 +128,7 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
         if($lastInsertId)
         {
         echo "<script type='text/javascript'>alert('Product Insert Sucessfull!');</script>";
-        echo "<script type='text/javascript'> document.location = 'dashboard.php'; </script>";
+        echo "<script type='text/javascript'> document.location = 'product.php'; </script>";
         }
         else 
         {
@@ -277,7 +281,7 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                     <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                    $ <input type="number" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" min="0.01" step="0.01" max="1000" value="" required >
+                                     <input type="number" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" min="0.01" step="0.01" max="1000" value="" required >
                                     <?php
                                 } else { ?>
                                     <input type="number" name="RetailPrice" class="form-control" style="Width:100px" id="RetailPrice" min="0.01" step="0.01" max="1000" value="<?php echo htmlentities($resultP->RetailPrice);?>" required >
@@ -351,10 +355,10 @@ if(move_uploaded_file($file_loc,$folder.$final_file))
                                 <?php
                                 if ($ProductStatus == "Insert")
                                 { ?>
-                                <label class="col-sm-1 control-label">Image<span style="color:red">*</span></label>
+                                <label class="col-sm-1 control-label">Image </label>
                                  <?php
                                 } else { ?>
-                                <label class="col-sm-1 control-label">Image<span style="color:red">*</span></label><img src=../images/<?php echo htmlentities($resultP->image);?> width="40" height="40">
+                                <label class="col-sm-1 control-label">Image </label><img src=../images/<?php echo htmlentities($resultP->image);?> width="40" height="40">
                                  <?php } ?>
                                 <div class="col-sm-3">
                                     <div>

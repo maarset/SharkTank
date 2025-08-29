@@ -237,7 +237,7 @@ if ($passwordreset == "true")
 
 
 <div class="form-group">
-<label class="col-sm-2 control-label">Image<span style="color:red">*</span></label>
+<label class="col-sm-2 control-label">Image</label>
 <div class="col-sm-4">
 <input type="file" name="image" class="form-control">
 </div>
@@ -257,11 +257,16 @@ if ($passwordreset == "true")
 	<label class="col-sm-2 control-label">Team<span style="color:red">*</span></label>
 		<div class="col-sm-4">
 			<?php
-			$sqlT = "SELECT * from Team where Status = 1";
+			$sqlT = "SELECT * from Team where ClassID = (:classid) AND Status = 1";
 			$queryT = $dbh -> prepare($sqlT);
+			$queryT-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 			$queryT->execute();
 			$resultT=$queryT->fetchAll(PDO::FETCH_OBJ);
 			$cntT=1;	
+
+						
+
+
 			if ($result->designation == "Student")
 			{
 			?>

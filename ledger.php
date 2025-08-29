@@ -95,7 +95,7 @@ th { white-space: nowrap; }
 
 						<!-- Zero Configuration Table -->
 						<div class="panel panel-default">
-							<div class="panel-heading"><H4>List Transactions <?php if ($Designation == "Student") { ?><a href="new-ledger.php?TeamID=<?php echo($TeamID)?>">New</a><?php } ?></H4></div>
+							<div class="panel-heading"><H4>List Transactions <a href="new-ledger.php?TeamID=<?php echo($TeamID)?>">New</a></H4></div>
 							<div class="panel-body">
 							<?php if($error){?><div class="errorWrap" id="msgshow"><?php echo htmlentities($error); ?> </div><?php } 
 				else if($msg){?><div class="succWrap" id="msgshow"><?php echo htmlentities($msg); ?> </div><?php }?>
@@ -168,7 +168,7 @@ foreach($resultLs as $result)
 					<div class="col-md-12">
 <?php 
 						$sqlS = "SELECT SUM(L.Amount) AS SUM,week(L.dateentered) AS WEEK,CAST(L.dateentered AS DATE) AS dateentered ";
-						$sqlS .= "from Ledger AS L WHERE    L.TeamID = (:TeamID)  ";
+						$sqlS .= "from Ledger AS L WHERE    L.TeamID = (:TeamID) AND Status = 1   ";
 						$sqlS .= "group by week(L.dateentered) ORDER BY L.dateentered asc";
 						$queryS = $dbh -> prepare($sqlS);
 						$queryS-> bindParam(':TeamID', $TeamID, PDO::PARAM_STR);

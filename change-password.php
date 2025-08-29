@@ -21,10 +21,11 @@ $query-> execute();
 $results = $query -> fetchAll(PDO::FETCH_OBJ);
 if($query -> rowCount() > 0)
 {
-$con="update users set password=:newpassword where email=:username";
+$con="update users set password=:newpassword where email=:username and ClassID =:classid ";
 $chngpwd1 = $dbh->prepare($con);
 $chngpwd1-> bindParam(':username', $username, PDO::PARAM_STR);
 $chngpwd1-> bindParam(':newpassword', $newpassword, PDO::PARAM_STR);
+$chngpwd1-> bindParam(':classid', $ClassIDGlobal, PDO::PARAM_STR);
 $chngpwd1->execute();
 $msg="Your Password succesfully changed";
 }
